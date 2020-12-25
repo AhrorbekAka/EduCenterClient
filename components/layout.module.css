@@ -1,0 +1,56 @@
+.container {
+
+}
+
+.sidebar {
+    padding: 5px 0;
+    min-height: 100vh;
+    border-right: 1px black solid;
+    background: #f6f8f8;
+    width: 0;
+    z-index: 1;
+    top: 0;
+    position: absolute;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+}
+
+.logo{
+    text-align: center;
+    overflow-x: hidden;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    color: #0a3f9f;
+}
+
+.toggleButton {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    right: -30px;
+    z-index: -1;
+}
+
+.navLink>p {
+    font-weight: bold;
+    color: #097272;
+    overflow-x: hidden;
+    padding-left: 2rem;
+    margin-bottom: 20px;
+}
+
+.children {
+    margin-left: 30px;
+    padding: 10px;
+    background: aqua;
+    height: 100vh;
+}
+
+@media (min-width: 600px) {
+    .sideBar {
+        width: 15%;
+        z-index: 0;
+        position: static;
+    }
+}
