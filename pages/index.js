@@ -28,13 +28,17 @@ export default function Home() {
     return (
         <>
             {/*<Layout home>*/}
-            <div className='card'>
-                <input className='form-control' onChange={(event) => changeHandler(event)} value={payload.phoneNumber} type="text"
-                       name="phoneNumber"/>
-                <input className='form-control' onChange={(event) => changeHandler(event)} value={payload.password} type="password"
-                       name="password"/>
+            <div className='card w-75 m-auto'>
+                <div className="card-body">
+                    <input className='form-control' onChange={(event) => changeHandler(event)}
+                           value={payload.phoneNumber} type="text"
+                           name="phoneNumber"/>
+                    <input className='form-control' onChange={(event) => changeHandler(event)} value={payload.password}
+                           type="password"
+                           name="password"/>
 
-                <button onClick={login} className='btn btn-primary'>Log in</button>
+                    <button onClick={login} className='btn btn-primary'>Log in</button>
+                </div>
             </div>
         </>
     )
