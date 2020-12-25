@@ -18,8 +18,8 @@ export default function Home() {
     const router = useRouter();
 
     const login = async () => {
-        const {data} = await axios.post(DOMAIN+'/api/auth/login', payload)
-        if(data.statusCodeValue===200){
+        const {data} = await axios.post(DOMAIN + '/api/auth/login', payload)
+        if (data.statusCodeValue === 200) {
             await localStorage.setItem("EducationCenterToken", data.body.accessToken);
             await router.push("/groups")
         }
@@ -27,10 +27,15 @@ export default function Home() {
 
     return (
         <>
-        {/*<Layout home>*/}
-            <input onChange={(event)=>changeHandler(event)} value={payload.phoneNumber} type="text" name="phoneNumber"/>
-            <input onChange={(event)=>changeHandler(event)} value={payload.password} type="password" name="password"/>
-            <button onClick={login}>Log in</button>
+            {/*<Layout home>*/}
+            <div className='card'>
+                <input className='form-control' onChange={(event) => changeHandler(event)} value={payload.phoneNumber} type="text"
+                       name="phoneNumber"/>
+                <input className='form-control' onChange={(event) => changeHandler(event)} value={payload.password} type="password"
+                       name="password"/>
+
+                <button onClick={login} className='btn btn-primary'>Log in</button>
+            </div>
         </>
     )
 }
