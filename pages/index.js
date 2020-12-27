@@ -32,18 +32,20 @@ export default function Home() {
             <div className="row mt-5">
                 <div className="col-10 offset-1 col-md-4 offset-md-4">
 
-                    <div className='card'>
-                        <div className='card-header text-center text-success'>Log In</div>
-                        <div className="card-body text-right p-1 p-md-3">
-                            <input className='form-control form-group' onChange={(event) => changeHandler(event)}
+                    <div className='card text-center'>
+                        <div className='card-header text-success font-weight-bold'>Log In</div>
+                        <div className="card-body p-2 p-md-3">
+                            <input className='form-control form-group mt-2 text-center' onChange={(event) => changeHandler(event)}
                                    value={payload.phoneNumber} type="text"
+                                   placeholder='Login'
                                    name="phoneNumber"/>
-                            <input className='form-control form-group' onChange={(event) => changeHandler(event)}
+                            <input className='form-control form-group text-center' onChange={(event) => changeHandler(event)}
                                    value={payload.password}
+                                   placeholder='Password'
                                    type="password"
                                    name="password"/>
 
-                            <button onClick={login} className='btn btn-primary form-group'>Log in</button>
+                            <button onClick={login} className='btn btn-primary form-group text-monospace'>Log In</button>
                         </div>
                     </div>
                 </div>
