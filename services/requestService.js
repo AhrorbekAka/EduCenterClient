@@ -2,6 +2,7 @@ import axios from 'axios';
 
 
 export const DOMAIN = "https://edu-centre.herokuapp.com";
+// export const DOMAIN = "http://localhost:";
 
 
 export function queryData(data) {
@@ -11,15 +12,17 @@ export function queryData(data) {
 
     delete data.path;
     delete data.method;
-    return axios({
+    try {
+        return axios({
         url: DOMAIN+ path,
         method: method,
         data: data,
         headers:{
             Authorization:"Bearer "+token
         }
-    })
-}
+    })} catch (e) {
+        return {object: {}}
+    }}
 
 export function queryParam(param) {
     let token = localStorage.getItem('EducationCenterToken');
@@ -28,12 +31,15 @@ export function queryParam(param) {
 
     delete param.path;
     delete param.method;
-    return axios({
+
+    try{return axios({
         url: DOMAIN+ path,
         method: method,
         params: param,
         headers:{
             Authorization:"Bearer "+token
         }
-    })
+    })} catch (e){
+        return {object: {}}
+    }
 }
