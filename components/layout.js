@@ -2,7 +2,6 @@ import styles from './layout.module.css'
 import Head from "next/head";
 import {useEffect, useState} from "react";
 import Link from "next/link";
-import axios from "axios"
 import {queryData} from "../services/requestService";
 
 export default function Layout({children, home}) {

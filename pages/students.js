@@ -6,14 +6,17 @@ import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import {Button, Card, CardBody, CardHeader, Col, Collapse, Container, FormGroup, Input, Label, Row} from "reactstrap";
+import StudentModal from "../components/studentModal";
+
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function Students() {
     const [groups, setGroups] = useState([{id: '', students: []}])
     const [modal, setModal] = useState(false)
     const [subjects, setSubjects] = useState([])
     const [teachers, setTeachers] = useState([])
-    const [teacherIdList, setTeacherIdList] = useState([])
-    const [group, setGroup] = useState({id: ''})
+    const [group, setGroup] = useState({id: '', teachers: [], subject: {}})
 
     const [modalOpen, setModalOpen] = useState(false)
     const [student, setStudent] = useState()
@@ -29,8 +32,8 @@ export default function Students() {
     }
 
 
-    const openModal = () => {
-        queryParam({
+    const openModal = async (chosenGroup) => {
+        await queryParam({
             path: '/api/subject',
             method: 'get'
         }).then(response => {
@@ -39,29 +42,41 @@ export default function Students() {
             }
         });
 
-        queryParam({
+        await queryParam({
             path: '/api/user',
             method: 'get'
         }).then(response => {
             if (response.status === 200) {
-                const idList = [];
+                const teacherList = [];
                 for (let teacher of response.data.object) {
-                    idList.push({teacherId: teacher.id, isTeacher: false});
+                    if (chosenGroup.teachers.length > 0) {
+                        teacher['isTeacher'] = false
+                        for (const teacher1 of chosenGroup.teachers) {
+                            if (teacher.id === teacher1.id) {
+                                teacher['isTeacher'] = true
+                                break
+                            }
+                        }
+                    } else {
+                        teacher['isTeacher'] = false
+                    }
                 }
                 setTeachers(response.data.object)
-                setTeacherIdList(idList)
             }
         });
-        toggleModal();
+        setModal(true);
     };
 
-    const toggleModal = () => setModal(!modal)
+    const closeModal = () => {
+        setModal(false)
+        setGroup({id: '', teachers: [], subject: {}})
+    }
 
     const onSave = async () => {
         const teacherIds = [];
-        for (let item of teacherIdList) {
+        for (let item of teachers) {
             if (item.isTeacher) {
-                teacherIds.push(item.teacherId)
+                teacherIds.push(item.id)
             }
         }
         const newGroup = {
@@ -79,24 +94,47 @@ export default function Students() {
             ...newGroup
         });
         requestStudents()
-        toggleModal()
+        closeModal()
     };
 
     const onSelectTeacher = (id) => {
-        for (let item of teacherIdList) {
-            if (item.teacherId === id) {
+        for (let item of teachers) {
+            if (item.id === id) {
                 item.isTeacher = !item.isTeacher
             }
         }
-        setTeacherIdList(teacherIdList)
+        setTeachers(teachers)
     };
 
-    const onEdit = (groupIndex) => {
-        setGroup(groups[groupIndex]);
-        toggleModal()
+    const onEdit = async (groupIndex) => {
+        const chosenGroup = groups[groupIndex]
+        setGroup(chosenGroup);
+
+        console.log(chosenGroup);
+
+        // console.log(chosenGroup)
+        // alert('groupkeld')
+        openModal(chosenGroup)
     };
 
-    const onDelete = async (groupId) => {
+    const onDelete = (group) => {
+        console.log(group)
+        confirmAlert({
+            title: 'Guruhni o`chirish',
+            message: <p><strong>{group.name}</strong> guruhini o`chirmoqchimisiz</p>,
+            buttons: [
+                {
+                    label: 'Ha',
+                    onClick: () => deleteGroup(group.id)
+                },
+                {
+                    label: 'Yo`q',
+                    // onClick: () => alert('Click No')
+                }
+            ]
+        });
+    };
+    const deleteGroup = async (groupId) => {
         await queryParam({
             path: '/api/groups/closeOrReopen',
             method: 'patch',
@@ -109,11 +147,16 @@ export default function Students() {
     const [modalStudent, setModalStudent] = useState({id: ''})
     const [newStudentGroupId, setNewStudentGroupId] = useState('')
     const [pageStudent, setPageStudent] = useState({content: [{lastName: '', firstName: ''}]})
+    const [studentPayload, setStudentPayload] = useState({isOpen: false, groupId: ''})
 
     const openStudentModal = (groupId) => {
-        setNewStudentGroupId(groupId)
-        toggleStudentModal()
+        setStudentPayload({isOpen: true, groupId})
+
+        // StudentModal({groupId})
+        // setNewStudentGroupId(groupId)
+        // toggleStudentModal()
     }
+
     const toggleStudentModal = () => {
         setModalStudent({})
         setStudentModal(!studentModal)
@@ -138,15 +181,15 @@ export default function Students() {
     }
 
     const studentChangeHandler = async (e) => {
-        if(e.target.value.length===36) {
+        if (e.target.value.length === 36) {
             const studentId = document.getElementsByName(e.target.name)[0].value
-            for(const student of pageStudent.content){
-                if(student.id===studentId){
+            for (const student of pageStudent.content) {
+                if (student.id === studentId) {
                     setModalStudent(student)
                     document.getElementsByName(e.target.name)[0].value = student[e.target.name]
                 }
             }
-        }else if (e.target.value.length > 2) {
+        } else if (e.target.value.length > 2) {
             const res = await queryParam({path: "/api/student/search", method: 'get', search: e.target.value})
             setPageStudent(res.data.object)
         }
@@ -184,7 +227,8 @@ export default function Students() {
             </Head>
 
             <Container>
-                <Row><Col className='text-center pt-2'><Button color={'success'} onClick={openModal}>Guruh
+                <Row><Col className='text-center pt-2'><Button color={'success'}
+                                                               onClick={() => openModal({teachers: []})}>Guruh
                     qo`shish</Button></Col></Row>
                 <Row><Col className='p-0' md='12'>
                     <div className=" accordion my-3" id="accordionExample">
@@ -209,9 +253,13 @@ export default function Students() {
                                         >
                                             {group.name}
                                         </Button>
-                                        <button onClick={() => onDelete(group.id)}
+                                        <button onClick={() => onEdit(index)} color={''}
                                                 className='position-absolute btn btn-light px-1'
-                                                style={{zIndex: '10', right: '5px'}}>❌
+                                                style={{zIndex: '1', right: '5px'}}>✏️
+                                        </button>
+                                        <button onClick={() => onDelete(group)}
+                                                className='position-absolute btn btn-light px-1'
+                                                style={{zIndex: '1', left: '0'}}>❌
                                         </button>
                                     </div>
                                 </CardHeader>
@@ -272,18 +320,22 @@ export default function Students() {
             </Container>
 
             {/*Save Group Modal*/}
-            <Modal isOpen={modal} toggle={toggleModal}>
-                <ModalHeader toggle={toggleModal} className="bg-info text-white">Yangi guruh qo`shish</ModalHeader>
+            <Modal isOpen={modal} toggle={closeModal}>
+                <ModalHeader toggle={closeModal} className="bg-info text-white">Yangi guruh qo`shish</ModalHeader>
                 <ModalBody>
                     <FormGroup>
                         <Input type="text" defaultValue={group.name} name="name"
                                placeholder="Guruh nomi"/>
                     </FormGroup>
                     <FormGroup>
-                        <Input type="select" name="subjectName" defaultValue={group.subjectName}>
-                            <option>Fanni tanlash</option>
-                            {subjects.map((subject, index) => <option
-                                key={index}>{subject.subjectName}</option>)}
+                        <Input type="select" name="subjectName" defaultValue={group.subject.subjectName}>
+                            {!group.subject.subjectName ? <>
+                                    <option>Fanni tanlash</option>
+                                    {subjects.map((subject, index) => <option
+                                        key={index}>{subject.subjectName}</option>)}
+                                </> :
+                                <option selected={true} >{group.subject.subjectName}</option>}
+
                         </Input>
                     </FormGroup>
                     <div className="border rounded px-3 py-2 mb-3">
@@ -292,7 +344,7 @@ export default function Students() {
                             <FormGroup key={index} check className="ml-3"
                                        onChange={() => onSelectTeacher(teacher.id)}>
                                 <Label check>
-                                    <Input type="checkbox"/>
+                                    <Input type="checkbox" defaultChecked={teacher.isTeacher}/>
                                     <h6>{teacher.firstName + ' ' + teacher.lastName}</h6>
                                 </Label>
                             </FormGroup>
@@ -300,7 +352,7 @@ export default function Students() {
                     </div>
                     <FormGroup>
                         <Input type="text" defaultValue={group.payment} name="payment"
-                               placeholder="Bu guruh uchun boshlang`ich tolovni kirting"/>
+                               placeholder="Bu guruh uchun boshlang`ich to`lovni kirting"/>
                     </FormGroup>
                     <FormGroup>
                         <Input type="text" defaultValue={group.description} name="description"
@@ -311,6 +363,8 @@ export default function Students() {
                     </FormGroup>
                 </ModalBody>
             </Modal>
+
+            <StudentModal payload={studentPayload}/>
 
             {/*Save Student Modal*/}
             <Modal isOpen={studentModal} toggle={toggleStudentModal} unmountOnClose={true}>

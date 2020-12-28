@@ -8,7 +8,7 @@
     border-right: 1px black solid;
     background: #f6f8f8;
     width: 0;
-    z-index: 1;
+    z-index: 5;
     top: 0;
     position: absolute;
     transition-duration: 0.5s;
