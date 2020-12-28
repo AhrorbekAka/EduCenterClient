@@ -106,14 +106,9 @@ export default function Students() {
         setTeachers(teachers)
     };
 
-    const onEdit = async (groupIndex) => {
+    const onEdit = (groupIndex) => {
         const chosenGroup = groups[groupIndex]
         setGroup(chosenGroup);
-
-        console.log(chosenGroup);
-
-        // console.log(chosenGroup)
-        // alert('groupkeld')
         openModal(chosenGroup)
     };
 
@@ -134,6 +129,7 @@ export default function Students() {
             ]
         });
     };
+
     const deleteGroup = async (groupId) => {
         await queryParam({
             path: '/api/groups/closeOrReopen',
@@ -209,14 +205,17 @@ export default function Students() {
     }
 
     const savePayment = async () => {
+        document.getElementById('paymentSubmitBtn').disabled=true
         const paymentAmount = document.getElementById("payment").value
         if (paymentAmount.length > 0 && paymentAmount > 0) {
-            await queryData({path: '/api/student/payment', method: 'patch', paymentAmount, ...student})
+            await queryData({path: '/api/student/payment', method: 'patch', paymentAmount, ...student}).then(res=>
+                document.getElementById('paymentSubmitBtn').disabled = false
+        )
             await requestStudents()
             togglePaymentModal()
         } else {
             alert('Noto`g`ri qiymat kiritdingiz')
-            //pop-up
+            pop-up
         }
     }
 
@@ -430,7 +429,7 @@ export default function Students() {
                 <ModalHeader toggle={togglePaymentModal}>To`ov miqdorini kiriting</ModalHeader>
                 <ModalBody className='text-right'>
                     <input id="payment" placeholder='Summa' className='form-control input-group' type="text"/>
-                    <button onClick={savePayment} className='button-top btn btn-info mt-3'>Save</button>
+                    <button id='paymentSubmitBtn' onClick={savePayment} className='button-top btn btn-info mt-3'>Save</button>
                 </ModalBody>
             </Modal>
         </Layout>
