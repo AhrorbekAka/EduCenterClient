@@ -12,25 +12,40 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function Students() {
-    const [groups, setGroups] = useState([{id: '', students: []}])
+    const [groups, setGroups] = useState([])
     const [modal, setModal] = useState(false)
     const [subjects, setSubjects] = useState([])
     const [teachers, setTeachers] = useState([])
     const [group, setGroup] = useState({id: '', teachers: [], subject: {}})
+    const [isDeletedGroupPage, setDeletedGroupPage] = useState(true)
 
     const [modalOpen, setModalOpen] = useState(false)
     const [student, setStudent] = useState()
     const [openedCollapse, setOpenedCollapse] = React.useState("")
 
     useEffect(() => {
-        requestStudents()
+        requestGroups()
     }, [])
 
-    const requestStudents = async () => {
-        const res = await queryData({path: "/api/student", method: "get"})
+    const requestGroups = async () => {
+        const res = await queryParam({path: "/api/groups/with-s-balance", method: "get"})
         setGroups(res.data.object)
     }
 
+
+    const togglePage = () =>{
+        setDeletedGroupPage(!isDeletedGroupPage)
+        requestDeletedGroups()
+    }
+    const requestDeletedGroups = async () => {
+        if(isDeletedGroupPage){
+            const res = await queryParam({path: "/api/groups/with-s-balance", method: "get", isPresent: false})
+            setGroups(res.data.object)
+        } else {
+            requestGroups()
+        }
+        setDeletedGroupPage(!isDeletedGroupPage)
+    }
 
     const openModal = async (chosenGroup) => {
         await queryParam({
@@ -93,7 +108,7 @@ export default function Students() {
             method: 'post',
             ...newGroup
         });
-        requestStudents()
+        requestGroups()
         closeModal()
     };
 
@@ -113,10 +128,9 @@ export default function Students() {
     };
 
     const onDelete = (group) => {
-        console.log(group)
         confirmAlert({
             title: 'Guruhni o`chirish',
-            message: <p><strong>{group.name}</strong> guruhini o`chirmoqchimisiz</p>,
+            message: <p><strong>{group.name}</strong> {isDeletedGroupPage? 'guruhini o`chirmoqchimisiz':'guruhni tiklamoqchimisiz'}</p>,
             buttons: [
                 {
                     label: 'Ha',
@@ -136,7 +150,7 @@ export default function Students() {
             method: 'patch',
             groupId
         });
-        requestStudents()
+        requestGroups()
     };
 
     const [studentModal, setStudentModal] = useState(false)
@@ -146,6 +160,7 @@ export default function Students() {
     const [studentPayload, setStudentPayload] = useState({isOpen: false, groupId: ''})
 
     const openStudentModal = (groupId) => {
+        setNewStudentGroupId(groupId)
         setStudentPayload({isOpen: true, groupId})
 
         // StudentModal({groupId})
@@ -172,7 +187,7 @@ export default function Students() {
             method: 'post',
             ...newStudent
         });
-        requestStudents()
+        requestGroups()
         toggleStudentModal()
     }
 
@@ -211,7 +226,7 @@ export default function Students() {
             await queryData({path: '/api/student/payment', method: 'patch', paymentAmount, ...student}).then(res=>
                 document.getElementById('paymentSubmitBtn').disabled = false
         )
-            await requestStudents()
+            await requestGroups()
             togglePaymentModal()
         } else {
             alert('Noto`g`ri qiymat kiritdingiz')
@@ -226,12 +241,16 @@ export default function Students() {
             </Head>
 
             <Container>
-                <Row><Col className='text-center pt-2'><Button color={'success'}
-                                                               onClick={() => openModal({teachers: []})}>Guruh
-                    qo`shish</Button></Col></Row>
+                <Row><Col className='text-center pt-2'>
+                    <Button className='mb-1 text-white' color={isDeletedGroupPage?'warning':'info'} onClick={requestDeletedGroups}>{isDeletedGroupPage?'Deleted':'Present'}</Button>
+                    <br/>
+                    <Button disabled={!isDeletedGroupPage} color={'success'} onClick={() => openModal({teachers: []})}>
+                        Guruh qo`shish
+                    </Button>
+                </Col></Row>
                 <Row><Col className='p-0' md='12'>
                     <div className=" accordion my-3" id="accordionExample">
-                        {groups.map((group, index) =>
+                        {groups&&groups.map((group, index) =>
                             <Card key={index}>
                                 <CardHeader
                                     className='p-0'
@@ -268,7 +287,7 @@ export default function Students() {
                                     data-parent="#accordionExample"
                                     id={group.id.toString()}
                                 >
-                                    <CardBody className="opacity-8 p-0">
+                                    <CardBody className="opacity-8 p-0  table-responsive">
                                         <table className='table table-dark m-0'>
                                             <thead>
                                             <tr>
@@ -286,7 +305,7 @@ export default function Students() {
                                             </tr>
                                             </thead>
                                             <tbody>{
-                                                group.students.length > 0 ?
+                                                group.students&&(group.students.length > 0 ?
                                                     group.students.map((student, i) => (
                                                         <tr key={i}>
                                                             <td>{i + 1}</td>
@@ -307,7 +326,7 @@ export default function Students() {
                                                         <td colSpan='15' className='text-center m-0 p-2'>Bu guruhga
                                                             o`quvchi qo`shilmagan
                                                         </td>
-                                                    </tr>
+                                                    </tr>)
                                             }</tbody>
                                         </table>
                                     </CardBody>

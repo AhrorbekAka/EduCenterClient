@@ -1,7 +1,3 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import Layout from "../components/layout";
-import Link from "next/link";
 import axios from 'axios'
 import {useRouter} from "next/router";
 import {useState} from 'react';
@@ -24,6 +20,8 @@ export default function Home() {
         if (data.statusCodeValue === 200) {
             await localStorage.setItem("EducationCenterToken", data.body.accessToken);
             await router.push("/groups")
+        } else {
+            setPayload({})
         }
         setLoading(false)
     }

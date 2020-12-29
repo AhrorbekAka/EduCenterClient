@@ -2,19 +2,38 @@ import Layout from "../components/layout";
 import Head from "next/head";
 
 import {queryParam, queryData} from "../services/requestService";
-import {Button, Form, FormGroup, Input, Modal, ModalBody, ModalHeader} from "reactstrap";
-import {useState, useEffect} from 'react'
+import {Button, Col, Form, FormGroup, Input, Modal, ModalBody, ModalHeader} from "reactstrap";
+import React, {useState, useEffect} from 'react'
 
 export default function Employee() {
     const [users, setUsers] = useState([{roles: [{name: ""}]}])
     const [singleUser, setUser] = useState({id: null})
     const [modal, setModal] = useState(false)
+    const [isDeletedEmployeePage, setDeletedEmployeePage] = useState(true)
+    const [directorId, setDirectorId] = useState('')
+
     useEffect(() => {
-        requestEmployeeList()
+        requestEmployeeList().then(r => {
+            setDeletedEmployeePage(false)
+            checkIfDirector(r)
+        })
     }, [])
+
     const requestEmployeeList = async () => {
-        const res = await queryData({path: '/api/user', method: 'get'})
+        const res = await queryParam({path: '/api/user', method: 'get', isEnabled: isDeletedEmployeePage})
         setUsers(res.data.object)
+        setDeletedEmployeePage(!isDeletedEmployeePage)
+        return res.data.object
+    }
+
+    const checkIfDirector = (users) => {
+        for (let user of users) {
+            for (let role of user.roles) {
+                if (role.name === "DIRECTOR") {
+                    setDirectorId(user.id)
+                }
+            }
+        }
     }
 
     const toggleModal = () => setModal(!modal);
@@ -46,7 +65,7 @@ export default function Employee() {
             path: '/api/user/disable',
             method: 'patch',
             userId: userId
-        });
+        }).catch(error=>console.log(error))
         await requestEmployeeList()
     };
 
@@ -64,10 +83,19 @@ export default function Employee() {
                         <th>FIO</th>
                         <th>Tel</th>
                         <th>Kasb</th>
-                        <th><Button onClick={toggleModal} color={'success'} style={{width: '90px'}}>
+                        <th><Button disabled={isDeletedEmployeePage} onClick={toggleModal} color={'success'}
+                                    style={{width: '90px'}}>
                             {/*<i className='fa fa-user-plus'> </i>*/}
                             Add +
-                        </Button></th>
+                        </Button>
+                            <Button
+                                style={{width: '90px'}}
+                                className='ml-md-1 mt-1 mt-md-0 text-white'
+                                color={!isDeletedEmployeePage ? 'warning' : 'info'}
+                                onClick={requestEmployeeList}>
+                                {!isDeletedEmployeePage ? 'Deleted' : 'Present'}
+                            </Button>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -91,9 +119,11 @@ export default function Employee() {
                                         <i className='fa fa-edit'> </i>
                                         edit
                                     </Button>
-                                    <Button color={'danger'} onClick={() => onDelete(user.id)}>
+                                    <Button disabled={user.id===directorId}
+                                            color={!isDeletedEmployeePage ? 'danger' : 'primary'}
+                                            onClick={() => onDelete(user.id)}>
                                         {/*<i className='fa fa-trash'> </i>*/}
-                                        delete
+                                        {!isDeletedEmployeePage ? 'delete' : 'repair'}
                                     </Button>
                                 </td>
                             </tr>

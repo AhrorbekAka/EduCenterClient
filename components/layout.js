@@ -63,26 +63,14 @@ export default function Layout({children, home}) {
                                 </Link>
                             ))
                         }
-
-
-                        {/*<Link href="/employee">*/}
-                        {/*    <a className={styles.navLink}>*/}
-                        {/*        <p onClick={closeSidebar}>Ishchilar</p>*/}
-                        {/*    </a>*/}
-                        {/*</Link>*/}
-                        {/*<Link href="/groups">*/}
-                        {/*    <a className={styles.navLink}>*/}
-                        {/*        <p onClick={closeSidebar}>Guruhlar</p>*/}
-                        {/*    </a>*/}
-                        {/*</Link>*/}
-                        {/*<Link href="/students">*/}
-                        {/*    <a className={styles.navLink}>*/}
-                        {/*        <p onClick={closeSidebar}>O`quvchilar</p>*/}
-                        {/*    </a>*/}
-                        {/*</Link>*/}
+                        <Link href="/settings">
+                            <a className={styles.navLink}>
+                                <p onClick={closeSidebar}>SOZLAMALAR</p>
+                            </a>
+                        </Link>
                         <Link href="/">
                             <a onClick={logout} className={styles.navLink}>
-                                <p>Chiqish</p>
+                                <p>ChIQISh</p>
                             </a>
                         </Link>
                     </div>

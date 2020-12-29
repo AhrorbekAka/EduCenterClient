@@ -120,7 +120,7 @@ export default function Groups() {
                                         data-parent="#accordionExample"
                                         id={group.id.toString()}
                                     >
-                                        <CardBody className="opacity-8 p-0">
+                                        <CardBody className="opacity-8 p-0 table-responsive ">
                                             <table className='table table-dark m-0'>
                                                 <thead>
                                                 <tr>
