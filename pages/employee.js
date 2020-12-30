@@ -73,10 +73,7 @@ export default function Employee() {
 
 
     return (
-        <Layout loading={loading}>
-            <Head>
-                <title>Ishchilar</title>
-            </Head>
+        <Layout loading={loading} title={'Ishchilar'}>
             <div className="table-responsive">
                 <table className="table table-info table-hover text-primary text-center mb-0">
                     <thead>

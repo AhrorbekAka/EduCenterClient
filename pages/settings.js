@@ -46,7 +46,7 @@ export default function Settings() {
     }
 
     return (
-        <Layout>
+        <Layout title={"Sozlamalar"}>
             <div className="row mt-5 pt-5">
                 <div className='col-10 offset-1 col-md-4 offset-md-4 pt-5 text-center'>
                     <h3 className='text-info mb-4'>Parolni o`rgartirish</h3>
