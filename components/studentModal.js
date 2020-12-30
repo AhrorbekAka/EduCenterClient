@@ -6,21 +6,14 @@ import {useState} from "react";
 import {queryData, queryParam} from "../services/requestService";
 
 
-export default function StudentModal (payload) {
+export default function StudentModal(props) {
 
-    const [isOpen, setIsOpen] = useState(payload.isOpen)
     const [student, setStudent] = useState({})
-    const [newStudentGroupId, setNewStudentGroupId] = useState(payload.groupId)
     const [pageStudent, setPageStudent] = useState({content: [{lastName: '', firstName: ''}]})
 
-    const openStudentModal = (groupId) => {
-        setNewStudentGroupId(groupId)
-        toggleStudentModal()
-    }
-
-    const toggleStudentModal = () => {
+    const closeModal = () => {
         setStudent({})
-        setIsOpen(!isOpen)
+        props.toggleModal(false)
     }
 
     const onSaveStudent = async () => {
@@ -31,41 +24,39 @@ export default function StudentModal (payload) {
             phoneNumber: document.getElementsByName("phoneNumber")[0].value,
             parentsNumber: document.getElementsByName("parentsNumber")[0].value,
             address: document.getElementsByName("address")[0].value,
-            groupIdList: [newStudentGroupId]
+            groupIdList: [props.groupId]
         };
-        await queryData({
+        queryData({
             path: '/api/student',
             method: 'post',
             ...newStudent
-        });
-        requestStudents()
-        toggleStudentModal()
+        }).then(res=>{
+            alert(res.data.message)
+            props.requestGroupList()
+            closeModal()
+        })
     }
 
     const studentChangeHandler = async (e) => {
-        if(e.target.value.length===36) {
+        if (e.target.value.length === 36) {
             const studentId = document.getElementsByName(e.target.name)[0].value
-            for(const student of pageStudent.content){
-                if(student.id===studentId){
+            for (const student of pageStudent.content) {
+                if (student.id === studentId) {
                     setStudent(student)
                     document.getElementsByName(e.target.name)[0].value = student[e.target.name]
                 }
             }
-        }else if (e.target.value.length > 2) {
+        } else if (e.target.value.length > 2) {
             const res = await queryParam({path: "/api/student/search", method: 'get', search: e.target.value})
             setPageStudent(res.data.object)
         }
     }
 
-    const fillStudentModal = (inputName) => {
-        alert('wow')
-        console.log(document.getElementsByName(inputName)[0].value)
-    }
-
     return (
-        <Modal isOpen={isOpen} toggle={toggleStudentModal} unmountOnClose={true}>
-            <ModalHeader toggle={toggleStudentModal} className="bg-info text-white">Yangi abituriyent
-                qo`shish</ModalHeader>
+        <Modal isOpen={props.isOpen} toggle={closeModal} unmountOnClose={true}>
+            <ModalHeader toggle={closeModal} className="bg-info text-white">
+                Yangi abituriyent qo`shish
+            </ModalHeader>
             <ModalBody>
                 <FormGroup>
                     <datalist id="lastNameOption">

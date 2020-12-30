@@ -6,6 +6,7 @@ import {Button, Col, Form, FormGroup, Input, Modal, ModalBody, ModalHeader} from
 import React, {useState, useEffect} from 'react'
 
 export default function Employee() {
+    const [loading, setLoading] = useState(true)
     const [users, setUsers] = useState([{roles: [{name: ""}]}])
     const [singleUser, setUser] = useState({id: null})
     const [modal, setModal] = useState(false)
@@ -16,6 +17,7 @@ export default function Employee() {
         requestEmployeeList().then(r => {
             setDeletedEmployeePage(false)
             checkIfDirector(r)
+            setLoading(false)
         })
     }, [])
 
@@ -71,7 +73,7 @@ export default function Employee() {
 
 
     return (
-        <Layout>
+        <Layout loading={loading}>
             <Head>
                 <title>Ishchilar</title>
             </Head>

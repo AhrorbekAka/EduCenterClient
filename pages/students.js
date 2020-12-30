@@ -12,6 +12,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function Students() {
+    const [loading, setLoading] = useState(true)
     const [groups, setGroups] = useState([])
     const [modal, setModal] = useState(false)
     const [subjects, setSubjects] = useState([])
@@ -27,9 +28,11 @@ export default function Students() {
         requestGroups()
     }, [])
 
-    const requestGroups = async () => {
-        const res = await queryParam({path: "/api/groups/with-s-balance", method: "get"})
-        setGroups(res.data.object)
+    const requestGroups = () => {
+        queryParam({path: "/api/groups/with-s-balance", method: "get"}).then(res=>{
+            setGroups(res.data.object)
+            setLoading(false)
+        })
     }
 
 
@@ -154,61 +157,11 @@ export default function Students() {
     };
 
     const [studentModal, setStudentModal] = useState(false)
-    const [modalStudent, setModalStudent] = useState({id: ''})
-    const [newStudentGroupId, setNewStudentGroupId] = useState('')
-    const [pageStudent, setPageStudent] = useState({content: [{lastName: '', firstName: ''}]})
-    const [studentPayload, setStudentPayload] = useState({isOpen: false, groupId: ''})
+    const [selectedGroupId, setSelectedGroupId] = useState('')
 
     const openStudentModal = (groupId) => {
-        setNewStudentGroupId(groupId)
-        setStudentPayload({isOpen: true, groupId})
-
-        // StudentModal({groupId})
-        // setNewStudentGroupId(groupId)
-        // toggleStudentModal()
-    }
-
-    const toggleStudentModal = () => {
-        setModalStudent({})
-        setStudentModal(!studentModal)
-    }
-    const onSaveStudent = async () => {
-        const newStudent = {
-            id: modalStudent.id,
-            firstName: document.getElementsByName("firstName")[0].value,
-            lastName: document.getElementsByName("lastName")[0].value,
-            phoneNumber: document.getElementsByName("phoneNumber")[0].value,
-            parentsNumber: document.getElementsByName("parentsNumber")[0].value,
-            address: document.getElementsByName("address")[0].value,
-            groupIdList: [newStudentGroupId]
-        };
-        await queryData({
-            path: '/api/student',
-            method: 'post',
-            ...newStudent
-        });
-        requestGroups()
-        toggleStudentModal()
-    }
-
-    const studentChangeHandler = async (e) => {
-        if (e.target.value.length === 36) {
-            const studentId = document.getElementsByName(e.target.name)[0].value
-            for (const student of pageStudent.content) {
-                if (student.id === studentId) {
-                    setModalStudent(student)
-                    document.getElementsByName(e.target.name)[0].value = student[e.target.name]
-                }
-            }
-        } else if (e.target.value.length > 2) {
-            const res = await queryParam({path: "/api/student/search", method: 'get', search: e.target.value})
-            setPageStudent(res.data.object)
-        }
-    }
-
-    const fillStudentModal = (inputName) => {
-        alert('wow')
-        console.log(document.getElementsByName(inputName)[0].value)
+        setSelectedGroupId(groupId)
+        setStudentModal(true)
     }
 
     const openPaymentModal = (selectedStudent, groupId) => {
@@ -235,7 +188,7 @@ export default function Students() {
     }
 
     return (
-        <Layout>
+        <Layout loading={loading}>
             <Head>
                 <title>Students</title>
             </Head>
@@ -382,67 +335,8 @@ export default function Students() {
                 </ModalBody>
             </Modal>
 
-            <StudentModal payload={studentPayload}/>
+            {studentModal===true&&<StudentModal isOpen={studentModal} groupId={selectedGroupId} toggleModal={setStudentModal} requestGroupList={requestGroups()} />}
 
-            {/*Save Student Modal*/}
-            <Modal isOpen={studentModal} toggle={toggleStudentModal} unmountOnClose={true}>
-                <ModalHeader toggle={toggleStudentModal} className="bg-info text-white">Yangi abituriyent
-                    qo`shish</ModalHeader>
-                <ModalBody>
-                    <FormGroup>
-                        <datalist id="lastNameOption">
-                            {
-                                pageStudent.content.map((stud, index) =>
-                                    <option key={index} value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
-                            }
-                        </datalist>
-
-                        <Input list="lastNameOption" onChange={(event) => studentChangeHandler(event)} type="text"
-                               defaultValue={modalStudent.lastName} name="lastName"
-                               placeholder="Familiya"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <datalist id="firstNameOption">
-                            {
-                                pageStudent.content.map((stud, index) =>
-                                    <option key={index} value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
-                            }
-                        </datalist>
-                        <Input list="firstNameOption" onChange={(event) => studentChangeHandler(event)} type="text"
-                               defaultValue={modalStudent.firstName} name="firstName"
-                               placeholder="Ism"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <datalist id="phoneNumberOption">
-                            {
-                                pageStudent.content.map((stud, index) =>
-                                    <option key={index} value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
-                            }
-                        </datalist>
-                        <Input list="phoneNumberOption" onChange={(event) => studentChangeHandler(event)} type="text"
-                               defaultValue={modalStudent.phoneNumber} name="phoneNumber"
-                               placeholder="Telefon raqami"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <datalist id="parentsNumberOption">
-                            {
-                                pageStudent.content.map((stud, index) =>
-                                    <option key={index} value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
-                            }
-                        </datalist>
-                        <Input list="parentsNumberOption" onChange={(event) => studentChangeHandler(event)} type="text"
-                               defaultValue={modalStudent.parentsNumber} name="parentsNumber"
-                               placeholder="Ota-onasining telefon raqami"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Input type="text" defaultValue={modalStudent.address} name="address"
-                               placeholder="Manzili"/>
-                    </FormGroup>
-                    <FormGroup className="text-right">
-                        <Button color="success" onClick={onSaveStudent}>Saqlash</Button>
-                    </FormGroup>
-                </ModalBody>
-            </Modal>
 
             <Modal className='modal-right' isOpen={modalOpen} toggle={togglePaymentModal}>
                 <ModalHeader toggle={togglePaymentModal}>To`ov miqdorini kiriting</ModalHeader>
