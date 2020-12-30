@@ -3,7 +3,6 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 import Link from "next/link";
 import {queryData} from "../services/requestService";
-import Store from "./store";
 
 export default function Layout({children, home, loading}) {
     const [isOpen, setIsOpen] = useState(false)

@@ -1,8 +1,7 @@
 import Layout from "../components/layout";
 import {Button, FormGroup, Input} from "reactstrap";
-import ModalBody from "reactstrap/lib/ModalBody";
 import React, {useState} from "react";
-import {queryData, queryParam} from "../services/requestService";
+import {queryParam} from "../services/requestService";
 
 
 export default function Settings() {

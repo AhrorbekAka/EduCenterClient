@@ -1,9 +1,9 @@
 import Layout from "../components/layout";
 import Head from "next/head";
 
-import {queryParam, queryData} from "../services/requestService";
-import {Button, Col, Form, FormGroup, Input, Modal, ModalBody, ModalHeader} from "reactstrap";
-import React, {useState, useEffect} from 'react'
+import {queryData, queryParam} from "../services/requestService";
+import {Button, FormGroup, Input, Modal, ModalBody, ModalHeader} from "reactstrap";
+import React, {useEffect, useState} from 'react'
 
 export default function Employee() {
     const [loading, setLoading] = useState(true)

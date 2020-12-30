@@ -1,17 +1,7 @@
 import Layout from "../components/layout";
-import React from 'react'
-import {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
-import {
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    Collapse,
-    Container,
-    Row,
-    Col,
-} from "reactstrap";
+import {Button, Card, CardBody, CardHeader, Col, Collapse, Container, Row,} from "reactstrap";
 import {queryData} from "../services/requestService";
 import StudentModal from "../components/studentModal";
 

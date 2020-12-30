@@ -1,6 +1,6 @@
 import Layout from "../components/layout";
 import Head from "next/head";
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {queryData, queryParam} from "../services/requestService";
 import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
@@ -8,7 +8,7 @@ import ModalBody from "reactstrap/lib/ModalBody";
 import {Button, Card, CardBody, CardHeader, Col, Collapse, Container, FormGroup, Input, Label, Row} from "reactstrap";
 import StudentModal from "../components/studentModal";
 
-import { confirmAlert } from 'react-confirm-alert';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function Students() {
