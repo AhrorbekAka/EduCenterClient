@@ -78,6 +78,7 @@ export default function GroupModal({isOpen, setOpen, refresh, group}) {
                 } else {
                     alert(res.data.message)
                 }
+                setOpen(false)
                 setLoading(false)
             }
         )

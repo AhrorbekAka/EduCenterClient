@@ -36,6 +36,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
         }).then(res => {
             setStudent({})
             setLoading(false)
+            setOpen(false)
             refresh()
         })
     }

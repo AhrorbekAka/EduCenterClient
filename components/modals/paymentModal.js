@@ -1,5 +1,5 @@
 import AbstractModal from "./abstractModal";
-import {Input} from "reactstrap";
+import {InputGroupAddon, InputGroup, Button, Input} from "reactstrap";
 import {queryData} from "../../services/requestService";
 import {useState} from 'react'
 
@@ -14,6 +14,7 @@ export default function PaymentModal({isOpen, setOpen, payload, refresh}) {
                 if (!res.data.success) {
                     alert(res.data.message)
                 }
+                setOpen(false)
             })
             refresh()
         } else {
@@ -23,9 +24,18 @@ export default function PaymentModal({isOpen, setOpen, payload, refresh}) {
         setLoading(false)
     }
 
+    const setGroupCost=()=>{
+        document.getElementById("payment").value = payload.group.payment
+    }
+
     return (
         <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={savePayment} loading={loading}>
-            <Input id="payment" placeholder='Summa' type="text" defaultValue={payload.group.payment}/>
+            <InputGroup>
+                <Input id="payment" placeholder='Summa' type="text"/>
+                <InputGroupAddon addonType="append">
+                    <Button onClick={setGroupCost} color={'info'} >{payload.group.payment}</Button>
+                </InputGroupAddon>
+            </InputGroup>
             <p id='notification' className='text-center text-danger'> </p>
         </AbstractModal>
     )

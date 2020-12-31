@@ -8,7 +8,6 @@ export default function AbstractModal({isOpen, setOpen, submit, loading, childre
     const toggle = () => setOpen(false)
 
     const onSave = () => {
-        toggle()
         submit()
     }
 

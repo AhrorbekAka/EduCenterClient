@@ -8,8 +8,8 @@ export default function Layout({children, home, loading, title}) {
     const [isOpen, setIsOpen] = useState(false)
     const [menu, setMenu] = useState([])
 
-    useEffect(() => {
-        setMenu(localStorage.getItem('menu'))
+    useEffect(async () => {
+        await setMenu(localStorage.getItem('menu'))
     }, [])
 
     const toggleSidebar = () => {
