@@ -6,13 +6,14 @@ import {useState} from "react";
 
 export default function GroupModal({isOpen, setOpen, refresh, group}) {
 
+    const [subjects, setSubjects] = useState([])
+    const [teachers, setTeachers] = useState([])
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         requestSubjectList()
         requestTeacherList()
     }, [])
-
-    const [subjects, setSubjects] = useState([])
-    const [teachers, setTeachers] = useState([])
 
     const requestSubjectList = () => {
         queryParam({
@@ -45,11 +46,13 @@ export default function GroupModal({isOpen, setOpen, refresh, group}) {
                     }
                 }
                 setTeachers(res.data.object)
+                setLoading(false)
             }
         });
     }
 
     const onSave = async () => {
+        setLoading(true)
         const teacherIds = [];
         for (let item of teachers) {
             if (item.isTeacher) {
@@ -75,6 +78,7 @@ export default function GroupModal({isOpen, setOpen, refresh, group}) {
                 } else {
                     alert(res.data.message)
                 }
+                setLoading(false)
             }
         )
     };
@@ -90,7 +94,7 @@ export default function GroupModal({isOpen, setOpen, refresh, group}) {
 
 
     return (
-        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={onSave}>
+        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={onSave} loading={loading}>
             <FormGroup>
                 <Input type="text" defaultValue={group.name} name="name"
                        placeholder="Guruh nomi"/>

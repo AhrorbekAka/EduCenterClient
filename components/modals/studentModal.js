@@ -9,6 +9,7 @@ import AbstractModal from "./abstractModal";
 
 export default function StudentModal({isOpen, setOpen, payload, refresh}) {
 
+    const [loading, setLoading] = useState(false)
     const [student, setStudent] = useState({})
     const [pageStudent, setPageStudent] = useState({content: [{lastName: '', firstName: ''}]})
 
@@ -18,6 +19,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
     // }
 
     const onSaveStudent = async () => {
+        setLoading(true)
         const newStudent = {
             id: student.id,
             firstName: document.getElementsByName("firstName")[0].value,
@@ -33,6 +35,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
             ...newStudent
         }).then(res => {
             setStudent({})
+            setLoading(false)
             refresh()
         })
     }
@@ -53,7 +56,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
     }
 
     return (
-        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={onSaveStudent}>
+        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={onSaveStudent} loading={loading}>
             <FormGroup>
                 <datalist id="lastNameOption">
                     {

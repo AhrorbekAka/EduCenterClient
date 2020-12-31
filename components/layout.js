@@ -2,6 +2,7 @@ import styles from './layout.module.css'
 import Head from "next/head";
 import {useEffect, useState} from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Layout({children, home, loading, title}) {
     const [isOpen, setIsOpen] = useState(false)
@@ -36,7 +37,12 @@ export default function Layout({children, home, loading, title}) {
         <div
             className='position-absolute'
             style={{zIndex: '99', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
-            Loading . . .
+            <Image src="/loading(2).gif"
+                   alt="loading..."
+                   width={40}
+                   height={40}/>
+                   <br/>
+            <p className='pl-3 pt-3'> Loading . . .</p>
         </div>
     </div>)
     else return (

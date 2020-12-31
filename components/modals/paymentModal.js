@@ -1,11 +1,13 @@
 import AbstractModal from "./abstractModal";
-import ModalBody from "reactstrap/lib/ModalBody";
 import {Input} from "reactstrap";
 import {queryData} from "../../services/requestService";
+import {useState} from 'react'
 
 export default function PaymentModal({isOpen, setOpen, payload, refresh}) {
+    const [loading, setLoading] = useState(false)
 
     const savePayment = async () => {
+        setLoading(true)
         const paymentAmount = document.getElementById("payment").value
         if (paymentAmount.length > 0 && paymentAmount >= 100000) {
             await queryData({path: '/api/student/payment', method: 'patch', paymentAmount, ...payload.student}).then(res => {
@@ -18,6 +20,7 @@ export default function PaymentModal({isOpen, setOpen, payload, refresh}) {
             document.getElementById('notification').innerHTML = 'Eng kam to`lov miqdori 100 000 so`m.'
             document.getElementById("payment").value = ''
         }
+        setLoading(false)
     }
 
     return (

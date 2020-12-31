@@ -22,7 +22,7 @@ export default function Students() {
 
     useEffect(() => {
         let isMounted = true;
-        // setPresent(!isPresent)
+        setLoading(true)
         requestGroups(true)
         setPresent(!isPresent)
         return () => { isMounted = false };
@@ -40,6 +40,7 @@ export default function Students() {
     }
 
     const changePage = () =>{
+        setLoading(true)
         setPresent(!isPresent)
         requestGroups(!isPresent)
     }
