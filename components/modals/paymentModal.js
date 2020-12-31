@@ -24,7 +24,7 @@ export default function PaymentModal({isOpen, setOpen, payload, refresh}) {
     }
 
     return (
-        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={savePayment}>
+        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={savePayment} loading={loading}>
             <Input id="payment" placeholder='Summa' type="text" defaultValue={payload.group.payment}/>
             <p id='notification' className='text-center text-danger'> </p>
         </AbstractModal>

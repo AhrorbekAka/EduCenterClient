@@ -4,10 +4,10 @@ import {queryParam} from "../services/requestService";
 import {Button, Card, CardBody, CardHeader, Col, Collapse, Container, Row} from "reactstrap";
 import StudentModal from "../components/modals/studentModal";
 
-import {confirmAlert} from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+
 import GroupModal from "../components/modals/groupModal";
 import PaymentModal from "../components/modals/paymentModal";
+import {confirmAlertService} from "../services/confirmAlert";
 
 export default function Students() {
     const [loading, setLoading] = useState(true)
@@ -56,21 +56,7 @@ export default function Students() {
     };
 
     const onDelete = (group) => {
-        confirmAlert({
-            title: 'Guruhni o`chirish',
-            message: <p>
-                <strong>{group.name}</strong> {isPresent ? 'guruhini o`chirmoqchimisiz' : 'guruhni tiklamoqchimisiz'}
-            </p>,
-            buttons: [
-                {
-                    label: 'Ha',
-                    onClick: () => deleteGroup(group.id)
-                },
-                {
-                    label: 'Yo`q',
-                }
-            ]
-        });
+        confirmAlertService('Guruh', group.name, deleteGroup, group.id, isPresent)
     };
 
     const deleteGroup = async (groupId) => {

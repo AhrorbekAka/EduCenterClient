@@ -1,30 +1,29 @@
 import Layout from "../components/layout";
-import Head from "next/head";
 
-import {queryData, queryParam} from "../services/requestService";
-import {Button, FormGroup, Input, Modal, ModalBody, ModalHeader} from "reactstrap";
+import {queryParam} from "../services/requestService";
+import {Button} from "reactstrap";
 import React, {useEffect, useState} from 'react'
+import EmployeeModal from "../components/modals/employeeModal";
+import {confirmAlertService} from "../services/confirmAlert";
 
 export default function Employee() {
     const [loading, setLoading] = useState(true)
     const [users, setUsers] = useState([{roles: [{name: ""}]}])
-    const [singleUser, setUser] = useState({id: null})
+    const [user, setUser] = useState({id: null})
     const [modal, setModal] = useState(false)
-    const [isDeletedEmployeePage, setDeletedEmployeePage] = useState(true)
+    const [isDeletedPage, setDeletedPage] = useState(false)
     const [directorId, setDirectorId] = useState('')
 
     useEffect(() => {
-        requestEmployeeList().then(r => {
-            setDeletedEmployeePage(false)
+        requestEmployeeList(true).then(r => {
             checkIfDirector(r)
             setLoading(false)
         })
     }, [])
 
-    const requestEmployeeList = async () => {
-        const res = await queryParam({path: '/api/user', method: 'get', isEnabled: isDeletedEmployeePage})
+    const requestEmployeeList = async (isEnabled) => {
+        const res = await queryParam({path: '/api/user', method: 'get', isEnabled})
         setUsers(res.data.object)
-        setDeletedEmployeePage(!isDeletedEmployeePage)
         return res.data.object
     }
 
@@ -38,39 +37,30 @@ export default function Employee() {
         }
     }
 
-    const toggleModal = () => setModal(!modal);
+    const changePage = () => {
+        setDeletedPage(!isDeletedPage)
+        requestEmployeeList(isDeletedPage)
+    }
 
-    const onSave = async () => {
-        const newUser = {
-            id: singleUser.id,
-            firstName: document.getElementsByName('firstName')[0].value,
-            lastName: document.getElementsByName('lastName')[0].value,
-            phoneNumber: document.getElementsByName('phoneNumber')[0].value,
-        };
-        setUser({});
-        await queryData({
-            path: '/api/user',
-            method: 'post',
-            ...newUser
-        });
-        await requestEmployeeList()
-        toggleModal()
+    const openModal = () => setModal(true);
+
+    const onEdit = (user) => {
+        setUser(user)
+        openModal()
     };
 
-    const onEdit = (index) => {
-        setUser(users[index])
-        toggleModal()
+    const onDelete = (user) => {
+       confirmAlertService('Foydalanuvchi', user.firstName+' '+user.lastName, deleteEmployee, user.id, !isDeletedPage)
     };
 
-    const onDelete = async (userId) => {
+    const deleteEmployee=async (userId)=>{
         await queryParam({
             path: '/api/user/disable',
             method: 'patch',
             userId: userId
-        }).catch(error=>console.log(error))
-        await requestEmployeeList()
-    };
-
+        }).then(res=>requestEmployeeList(!isDeletedPage))
+            .catch(error => console.log(error))
+    }
 
     return (
         <Layout loading={loading} title={'Ishchilar'}>
@@ -82,17 +72,18 @@ export default function Employee() {
                         <th>FIO</th>
                         <th>Tel</th>
                         <th>Kasb</th>
-                        <th><Button disabled={isDeletedEmployeePage} onClick={toggleModal} color={'success'}
+                        <th>
+                            <Button disabled={isDeletedPage} onClick={openModal} color={'success'}
                                     style={{width: '90px'}}>
-                            {/*<i className='fa fa-user-plus'> </i>*/}
-                            Add +
-                        </Button>
+                                {/*<i className='fa fa-user-plus'> </i>*/}
+                                Add +
+                            </Button>
                             <Button
                                 style={{width: '90px'}}
                                 className='ml-md-1 mt-1 mt-md-0 text-white'
-                                color={!isDeletedEmployeePage ? 'warning' : 'info'}
-                                onClick={requestEmployeeList}>
-                                {!isDeletedEmployeePage ? 'Deleted' : 'Present'}
+                                color={isDeletedPage ? 'info' : 'warning'}
+                                onClick={changePage}>
+                                {isDeletedPage ? 'Present' : 'Deleted'}
                             </Button>
                         </th>
                     </tr>
@@ -114,15 +105,15 @@ export default function Employee() {
                                 <td>{user.phoneNumber}</td>
                                 <td>{user.roles.length > 0 && user.roles[0].name}</td>
                                 <td>
-                                    <Button className='mr-2' color={'info'} onClick={() => onEdit(index)}>
+                                    <Button className='mr-2' color={'info'} onClick={() => onEdit(user)}>
                                         <i className='fa fa-edit'> </i>
                                         edit
                                     </Button>
-                                    <Button disabled={user.id===directorId}
-                                            color={!isDeletedEmployeePage ? 'danger' : 'primary'}
-                                            onClick={() => onDelete(user.id)}>
+                                    <Button disabled={user.id === directorId}
+                                            color={!isDeletedPage ? 'danger' : 'primary'}
+                                            onClick={() => onDelete(user)}>
                                         {/*<i className='fa fa-trash'> </i>*/}
-                                        {!isDeletedEmployeePage ? 'delete' : 'repair'}
+                                        {!isDeletedPage ? 'delete' : 'repair'}
                                     </Button>
                                 </td>
                             </tr>
@@ -134,27 +125,12 @@ export default function Employee() {
                     </tbody>
                 </table>
 
-                <Modal isOpen={modal} toggle={toggleModal}>
-                    <ModalHeader toggle={toggleModal} className="bg-info text-white">Yangi foydalanuvchi
-                        qo`shish</ModalHeader>
-                    <ModalBody>
-                        <FormGroup>
-                            <Input type="text" defaultValue={singleUser.firstName} name="firstName"
-                                   placeholder="Ism"/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Input type="text" defaultValue={singleUser.lastName} name="lastName"
-                                   placeholder="Familiya"/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Input type="text" name="phoneNumber" defaultValue={singleUser.phoneNumber}
-                                   placeholder="Telefon raqami"/>
-                        </FormGroup>
-                        <FormGroup className="text-right">
-                            <Button type="submit" color="success" onClick={onSave}>Saqlash</Button>
-                        </FormGroup>
-                    </ModalBody>
-                </Modal>
+                {modal&&<EmployeeModal
+                    isOpen={modal}
+                    setOpen={setModal}
+                    user={user}
+                    refresh={requestEmployeeList}
+                />}
             </div>
         </Layout>
     )
