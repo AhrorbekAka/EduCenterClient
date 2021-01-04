@@ -37,6 +37,7 @@ export default function Students() {
             }
             setLoading(false)
         })
+        console.log(groups);
     }
 
     const changePage = () =>{
