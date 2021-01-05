@@ -1,7 +1,7 @@
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-export function confirmAlertService(title, name, onYes, id, isPresent) {
+export function confirmAlertService(title, name, onYes, params, isPresent) {
     confirmAlert({
         title: title+'ni o`chirish',
         message: <p>
@@ -10,7 +10,7 @@ export function confirmAlertService(title, name, onYes, id, isPresent) {
         buttons: [
             {
                 label: 'Ha',
-                onClick: () => onYes(id)
+                onClick: () => onYes(params)
             },
             {
                 label: 'Yo`q',

@@ -108,7 +108,7 @@ export default function Groups() {
             {studentModal === true && <StudentModal
                 isOpen={studentModal}
                 setOpen={setStudentModal}
-                payload={selectedGroupId}
+                payload={{selectedGroupId}}
                 refresh={requestGroupList}
             />}
 

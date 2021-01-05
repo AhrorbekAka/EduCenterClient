@@ -10,7 +10,7 @@ import AbstractModal from "./abstractModal";
 export default function StudentModal({isOpen, setOpen, payload, refresh}) {
 
     const [loading, setLoading] = useState(false)
-    const [student, setStudent] = useState({})
+    const [student, setStudent] = useState(!payload.student?{}:payload.student)
     const [pageStudent, setPageStudent] = useState({content: [{lastName: '', firstName: ''}]})
 
     // const closeModal = () => {
@@ -27,7 +27,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
             phoneNumber: document.getElementsByName("phoneNumber")[0].value,
             parentsNumber: document.getElementsByName("parentsNumber")[0].value,
             address: document.getElementsByName("address")[0].value,
-            groupIdList: [payload]
+            groupIdList: [payload.selectedGroupId!=null?payload.selectedGroupId:null]
         };
         queryData({
             path: '/api/student',

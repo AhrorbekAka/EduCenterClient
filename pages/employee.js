@@ -5,6 +5,9 @@ import {Button} from "reactstrap";
 import React, {useEffect, useState} from 'react'
 import EmployeeModal from "../components/modals/employeeModal";
 import {confirmAlertService} from "../services/confirmAlert";
+import DeleteButton from "../components/buttons/deleteButton";
+import EditButton from "../components/buttons/editButton";
+import AddButton from "../components/buttons/addButton";
 
 export default function Employee() {
     const [loading, setLoading] = useState(true)
@@ -73,11 +76,7 @@ export default function Employee() {
                         <th>Tel</th>
                         <th>Kasb</th>
                         <th>
-                            <Button disabled={isDeletedPage} onClick={openModal} color={'success'}
-                                    style={{width: '90px'}}>
-                                {/*<i className='fa fa-user-plus'> </i>*/}
-                                Add +
-                            </Button>
+                            <AddButton disabled={isDeletedPage} submit={openModal} style={{width: '90px', padding: '10px!important'}}/>
                             <Button
                                 style={{width: '90px'}}
                                 className='ml-md-1 mt-1 mt-md-0 text-white'
@@ -105,16 +104,8 @@ export default function Employee() {
                                 <td>{user.phoneNumber}</td>
                                 <td>{user.roles.length > 0 && user.roles[0].name}</td>
                                 <td>
-                                    <Button className='mr-2' color={'info'} onClick={() => onEdit(user)}>
-                                        <i className='fa fa-edit'> </i>
-                                        edit
-                                    </Button>
-                                    <Button disabled={user.id === directorId}
-                                            color={!isDeletedPage ? 'danger' : 'primary'}
-                                            onClick={() => onDelete(user)}>
-                                        {/*<i className='fa fa-trash'> </i>*/}
-                                        {!isDeletedPage ? 'delete' : 'repair'}
-                                    </Button>
+                                    <EditButton submit={() => onEdit(user)} size={'25px'} style={{marginRight: '10px'}}/>
+                                    <DeleteButton disabled={user.id === directorId} size={'25px'} submit={() => onDelete(user)} isDelete={isDeletedPage}/>
                                 </td>
                             </tr>
                         )

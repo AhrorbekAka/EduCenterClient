@@ -8,16 +8,18 @@ import StudentModal from "../components/modals/studentModal";
 import GroupModal from "../components/modals/groupModal";
 import PaymentModal from "../components/modals/paymentModal";
 import {confirmAlertService} from "../services/confirmAlert";
+import EditButton from "../components/buttons/editButton";
+import DeleteButton from "../components/buttons/deleteButton";
+import AddButton from "../components/buttons/addButton";
 
 export default function Students() {
     const [loading, setLoading] = useState(true)
 
     const [groups, setGroups] = useState([])
     const [groupModal, setGroupModal] = useState(false)
-    const [group, setGroup] = useState({subject:{}, teachers:[]})
+    const [group, setGroup] = useState({subject: {}, teachers: []})
     const [isPresent, setPresent] = useState(false)
     const [paymentModal, setPaymentModal] = useState(false)
-    const [student, setStudent] = useState()
     const [openedCollapse, setOpenedCollapse] = React.useState("")
 
     useEffect(() => {
@@ -25,12 +27,14 @@ export default function Students() {
         setLoading(true)
         requestGroups(true)
         setPresent(!isPresent)
-        return () => { isMounted = false };
+        return () => {
+            isMounted = false
+        };
     }, [])
 
     const requestGroups = (isPresent) => {
         queryParam({path: "/api/groups/with-s-balance", method: "get", isPresent: isPresent}).then(res => {
-            if(res.data.success) {
+            if (res.data.success) {
                 setGroups(res.data.object)
             } else {
                 alert(res.data.message)
@@ -40,7 +44,7 @@ export default function Students() {
         console.log(groups);
     }
 
-    const changePage = () =>{
+    const changePage = () => {
         setLoading(true)
         setPresent(!isPresent)
         requestGroups(!isPresent)
@@ -51,8 +55,7 @@ export default function Students() {
         setGroup(group)
     };
 
-    const onEditGroup = (groupIndex) => {
-        const chosenGroup = groups[groupIndex]
+    const onEditGroup = (chosenGroup) => {
         openGroupModal(chosenGroup)
     };
 
@@ -71,10 +74,35 @@ export default function Students() {
 
     const [studentModal, setStudentModal] = useState(false)
     const [selectedGroupId, setSelectedGroupId] = useState('')
+    const [student, setStudent] = useState({})
 
-    const openStudentModal = (groupId) => {
-        setSelectedGroupId(groupId)
+    const openStudentModal = () => {
         setStudentModal(true)
+    }
+
+    const createStudent = (groupId) => {
+        setStudent({})
+        setSelectedGroupId(groupId)
+        openStudentModal()
+    }
+
+    const onEditStudent = (selectedStudent) => {
+        setSelectedGroupId(null)
+        setStudent(selectedStudent)
+        openStudentModal()
+    }
+
+    const onDeleteStudent = (student, groupId) => {
+        confirmAlertService('Student', student.lastName+' '+student.firstName, deleteStudent, {studentId: student.id, groupId}, true)
+    };
+
+    const deleteStudent = async (params) => {
+        await queryParam({
+            path: '/api/student',
+            method: 'delete',
+            ...params
+        });
+        requestGroups(isPresent)
     }
 
     const openPaymentModal = (selectedStudent, group) => {
@@ -99,7 +127,7 @@ export default function Students() {
                             onClick={changePage}>{isPresent ? 'Deleted' : 'Present'}
                         </Button>
                         <br/>
-                        <Button disabled={!isPresent} color={'success'} onClick={()=>openGroupModal({})}>
+                        <Button disabled={!isPresent} color={'success'} onClick={() => openGroupModal({})}>
                             Guruh qo`shish
                         </Button>
                     </Col>
@@ -126,16 +154,25 @@ export default function Students() {
                                                 className='font-weight-bold text-decoration-none w-100 text-monospace text-uppercase'
                                                 color="link"
                                             >
-                                                <span className={isPresent?'':'text-danger'}>{group.name}</span>
+                                                <span className={isPresent ? '' : 'text-danger'}>{group.name}</span>
                                             </Button>
-                                            <button onClick={() => onEditGroup(index)} color={''}
-                                                    className='position-absolute btn btn-light px-1'
-                                                    style={{zIndex: '1', right: '5px'}}>✏️
-                                            </button>
-                                            <button onClick={() => onDelete(group)}
-                                                    className='position-absolute btn btn-light px-1'
-                                                    style={{zIndex: '1', left: '0'}}>❌
-                                            </button>
+
+                                            <EditButton submit={() => onEditGroup(group)}
+                                                        style={{
+                                                            zIndex: '1',
+                                                            right: '5px',
+                                                            bottom: 0,
+                                                            top: 0,
+                                                            position: 'absolute'
+                                                        }}/>
+
+                                            <DeleteButton submit={() => onDelete(group)} isDelete={!isPresent} style={{
+                                                zIndex: '1',
+                                                left: '5px',
+                                                top: '6px',
+                                                bottom: '6px',
+                                                position: 'absolute',
+                                            }}/>
                                         </div>
                                     </CardHeader>
                                     <Collapse
@@ -154,10 +191,8 @@ export default function Students() {
                                                     <th>Telefon №</th>
                                                     <th className='d-none d-md-table-cell'>Ota(Ona)sining raqami</th>
                                                     <th className='d-none d-md-table-cell'>Address</th>
-                                                    <th>
-                                                        <button onClick={() => openStudentModal(group.id)}
-                                                                className='badge badge-primary p-1'><strong>+</strong>
-                                                        </button>
+                                                    <th className='pb-2'>
+                                                        <AddButton style={{width: '60px'}} submit={() => createStudent(group.id)}/>
                                                     </th>
                                                 </tr>
                                                 </thead>
@@ -177,6 +212,11 @@ export default function Students() {
                                                                 <td>{student.phoneNumber}</td>
                                                                 <td className='d-none d-md-table-cell'>{student.parentsNumber}</td>
                                                                 <td className='d-none d-md-table-cell'>{student.address}</td>
+                                                                <td>
+                                                                    <EditButton submit={() => onEditStudent(student)}
+                                                                                size='25px'/>
+                                                                    <DeleteButton submit={()=>onDeleteStudent(student, group.id)} size='25px' style={{marginLeft: '10px'}}/>
+                                                                </td>
                                                             </tr>
                                                         )) :
                                                         <tr>
@@ -204,7 +244,7 @@ export default function Students() {
             {studentModal === true && <StudentModal
                 isOpen={studentModal}
                 setOpen={setStudentModal}
-                payload={selectedGroupId}
+                payload={{selectedGroupId, student}}
                 refresh={requestGroups}
             />}
 
