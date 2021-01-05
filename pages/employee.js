@@ -41,8 +41,9 @@ export default function Employee() {
     }
 
     const changePage = () => {
+        setLoading(true)
         setDeletedPage(!isDeletedPage)
-        requestEmployeeList(isDeletedPage)
+        requestEmployeeList(isDeletedPage).then(res=>setLoading(false))
     }
 
     const openModal = () => setModal(true);
