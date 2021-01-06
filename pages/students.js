@@ -18,7 +18,7 @@ export default function Students() {
     const [groups, setGroups] = useState([])
     const [groupModal, setGroupModal] = useState(false)
     const [group, setGroup] = useState({subject: {}, teachers: []})
-    const [isPresent, setPresent] = useState(false)
+    const [isPresent, setPresent] = useState(true)
     const [paymentModal, setPaymentModal] = useState(false)
     const [openedCollapse, setOpenedCollapse] = React.useState("")
 
@@ -26,7 +26,6 @@ export default function Students() {
         let isMounted = true;
         setLoading(true)
         requestGroups(true)
-        setPresent(!isPresent)
         return () => {
             isMounted = false
         };
@@ -41,7 +40,6 @@ export default function Students() {
             }
             setLoading(false)
         })
-        console.log(groups);
     }
 
     const changePage = () => {
@@ -51,25 +49,38 @@ export default function Students() {
     }
 
     const openGroupModal = (group) => {
-        setGroupModal(true);
         setGroup(group)
+        setGroupModal(true);
     };
 
     const onEditGroup = (chosenGroup) => {
         openGroupModal(chosenGroup)
     };
 
-    const onDelete = (group) => {
-        confirmAlertService('Guruh', group.name, deleteGroup, group.id, isPresent)
+    const onCloseGroup = (group) => {
+        confirmAlertService('Guruh', group.name, closeGroup, group.id, isPresent, true)
     };
 
-    const deleteGroup = async (groupId) => {
-        await queryParam({
+    const closeGroup = (groupId) => {
+        setLoading(true)
+        queryParam({
             path: '/api/groups/closeOrReopen',
             method: 'patch',
             groupId
-        });
-        requestGroups(isPresent)
+        }).then(res=>requestGroups(isPresent))
+    };
+
+    const onDeleteGroup = (group) => {
+        confirmAlertService('Guruh', group.name, deleteGroup, group.id, isPresent, false)
+    }
+
+    const deleteGroup = (groupId) => {
+        setLoading(true)
+        queryParam({
+            path: '/api/groups',
+            method: 'delete',
+            groupId
+        }).then(res=>requestGroups(false))
     };
 
     const [studentModal, setStudentModal] = useState(false)
@@ -92,17 +103,31 @@ export default function Students() {
         openStudentModal()
     }
 
-    const onDeleteStudent = (student, groupId) => {
-        confirmAlertService('Student', student.lastName+' '+student.firstName, deleteStudent, {studentId: student.id, groupId}, true)
+    const onDeleteStudentFromGroup = (student, groupId) => {
+        confirmAlertService('Student', student.lastName + ' ' + student.firstName, deleteStudentFromGroup, {
+            studentId: student.id,
+            groupId
+        }, true, true)
     };
-
-    const deleteStudent = async (params) => {
+    const deleteStudentFromGroup = async (params) => {
         await queryParam({
-            path: '/api/student',
-            method: 'delete',
+            path: '/api/student/delete-from-group',
+            method: 'patch',
             ...params
         });
         requestGroups(isPresent)
+    }
+
+    const onDeleteStudent = (studentId) => {
+        confirmAlertService('Student', student.lastName + ' ' + student.firstName, deleteStudent, studentId, true, false)
+    };
+
+    const deleteStudent = (studentId)=> {
+        queryParam({
+            path: '/api/student',
+            method: 'delete',
+            studentId
+        }).then(res=>requestGroups(false))
     }
 
     const openPaymentModal = (selectedStudent, group) => {
@@ -157,6 +182,28 @@ export default function Students() {
                                                 <span className={isPresent ? '' : 'text-danger'}>{group.name}</span>
                                             </Button>
 
+                                            <DeleteButton submit={() => onCloseGroup(group)} isDelete={!isPresent} style={{
+                                                zIndex: '1',
+                                                left: '5px',
+                                                top: '6px',
+                                                bottom: '6px',
+                                                position: 'absolute',
+                                            }}/>
+
+                                            <DeleteButton disableBtn={false}
+                                                          style={{
+                                                              display: isPresent ? 'none' : 'inline-block',
+                                                              padding: '0!important',
+                                                              marginRight: '10px',
+                                                              zIndex: '1',
+                                                              right: '25px',
+                                                              top: '6px',
+                                                              bottom: '6px',
+                                                              position: 'absolute',
+                                                          }}
+                                                          size={'25px'}
+                                                          submit={() => onDeleteGroup(group)} isDelete={true}/>
+
                                             <EditButton submit={() => onEditGroup(group)}
                                                         style={{
                                                             zIndex: '1',
@@ -165,14 +212,6 @@ export default function Students() {
                                                             top: 0,
                                                             position: 'absolute'
                                                         }}/>
-
-                                            <DeleteButton submit={() => onDelete(group)} isDelete={!isPresent} style={{
-                                                zIndex: '1',
-                                                left: '5px',
-                                                top: '6px',
-                                                bottom: '6px',
-                                                position: 'absolute',
-                                            }}/>
                                         </div>
                                     </CardHeader>
                                     <Collapse
@@ -192,7 +231,8 @@ export default function Students() {
                                                     <th className='d-none d-md-table-cell'>Ota(Ona)sining raqami</th>
                                                     <th className='d-none d-md-table-cell'>Address</th>
                                                     <th className='pb-2'>
-                                                        <AddButton style={{width: '60px'}} submit={() => createStudent(group.id)}/>
+                                                        <AddButton style={{width: '60px'}}
+                                                                   submit={() => createStudent(group.id)}/>
                                                     </th>
                                                 </tr>
                                                 </thead>
@@ -213,9 +253,15 @@ export default function Students() {
                                                                 <td className='d-none d-md-table-cell'>{student.parentsNumber}</td>
                                                                 <td className='d-none d-md-table-cell'>{student.address}</td>
                                                                 <td>
+                                                                    <DeleteButton
+                                                                        submit={() => onDeleteStudent(student.id)}
+                                                                        // isStudyingNow
+                                                                        size='25px' style={{display: true ? 'none' : 'inline-block', marginRight: '10px'}} disableBtn={false}/>
                                                                     <EditButton submit={() => onEditStudent(student)}
                                                                                 size='25px'/>
-                                                                    <DeleteButton submit={()=>onDeleteStudent(student, group.id)} size='25px' style={{marginLeft: '10px'}}/>
+                                                                    <DeleteButton
+                                                                        submit={() => onDeleteStudentFromGroup(student, group.id)}
+                                                                        size='25px' style={{marginLeft: '10px'}}/>
                                                                 </td>
                                                             </tr>
                                                         )) :

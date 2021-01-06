@@ -18,15 +18,14 @@ export default function Employee() {
     const [directorId, setDirectorId] = useState('')
 
     useEffect(() => {
-        requestEmployeeList(true).then(r => {
-            checkIfDirector(r)
-            setLoading(false)
-        })
+        requestEmployeeList(true).then(res=>checkIfDirector(res))
+        // checkIfDirector(users)
     }, [])
 
     const requestEmployeeList = async (isEnabled) => {
         const res = await queryParam({path: '/api/user', method: 'get', isEnabled})
         setUsers(res.data.object)
+        setLoading(false)
         return res.data.object
     }
 
@@ -43,7 +42,7 @@ export default function Employee() {
     const changePage = () => {
         setLoading(true)
         setDeletedPage(!isDeletedPage)
-        requestEmployeeList(isDeletedPage).then(res=>setLoading(false))
+        requestEmployeeList(isDeletedPage)
     }
 
     const openModal = () => setModal(true);
@@ -53,17 +52,31 @@ export default function Employee() {
         openModal()
     };
 
-    const onDelete = (user) => {
-       confirmAlertService('Foydalanuvchi', user.firstName+' '+user.lastName, deleteEmployee, user.id, !isDeletedPage)
+    const onDisable = (user) => {
+        confirmAlertService('Foydalanuvchi', user.firstName + ' ' + user.lastName, disableEmployee, user.id, !isDeletedPage, true)
     };
 
-    const deleteEmployee=async (userId)=>{
-        await queryParam({
+    const disableEmployee = (userId) => {
+        setLoading(true)
+        queryParam({
             path: '/api/user/disable',
             method: 'patch',
             userId: userId
-        }).then(res=>requestEmployeeList(!isDeletedPage))
+        }).then(res => requestEmployeeList(!isDeletedPage))
             .catch(error => console.log(error))
+    }
+
+    const onDelete = (user) => {
+        confirmAlertService('Foydalanuvchi', user.firstName + ' ' + user.lastName, deleteEmployee, user.id, !isDeletedPage,false)
+    }
+
+    const deleteEmployee = (userId) => {
+        setLoading(true)
+        queryParam({
+            path: '/api/user',
+            method: 'delete',
+            userId: userId
+        }).then(res => requestEmployeeList(false))
     }
 
     return (
@@ -77,7 +90,8 @@ export default function Employee() {
                         <th>Tel</th>
                         <th>Kasb</th>
                         <th>
-                            <AddButton disabled={isDeletedPage} submit={openModal} style={{width: '90px', padding: '10px!important'}}/>
+                            <AddButton disabled={isDeletedPage} submit={openModal}
+                                       style={{width: '90px', padding: '10px!important'}}/>
                             <Button
                                 style={{width: '90px'}}
                                 className='ml-md-1 mt-1 mt-md-0 text-white'
@@ -105,8 +119,14 @@ export default function Employee() {
                                 <td>{user.phoneNumber}</td>
                                 <td>{user.roles.length > 0 && user.roles[0].name}</td>
                                 <td>
-                                    <EditButton submit={() => onEdit(user)} size={'25px'} style={{marginRight: '10px'}}/>
-                                    <DeleteButton disabled={user.id === directorId} size={'25px'} submit={() => onDelete(user)} isDelete={isDeletedPage}/>
+                                    <DeleteButton disableBtn={false}
+                                                  style={{display: !isDeletedPage ? 'none' : 'inline-block', padding: '0!important', marginRight:'10px'}}
+                                                  size={'25px'}
+                                                  submit={() => onDelete(user)} isDelete={true}/>
+                                    <EditButton submit={() => onEdit(user)} size={'25px'}
+                                                style={{marginRight: '10px'}}/>
+                                    <DeleteButton disabled={user.id === directorId} size={'25px'}
+                                                  submit={() => onDisable(user)} isDelete={isDeletedPage}/>
                                 </td>
                             </tr>
                         )
@@ -117,7 +137,7 @@ export default function Employee() {
                     </tbody>
                 </table>
 
-                {modal&&<EmployeeModal
+                {modal && <EmployeeModal
                     isOpen={modal}
                     setOpen={setModal}
                     user={user}
