@@ -99,7 +99,7 @@ export default function Layout({children, home, loading, title}) {
                         </Link>
                     </div>
                     <main className='vh-100 m-0 m-md-3 p-0 pt-3 p-md-3'>
-                        <p style={{left: 0, right: 0, top: 0}} className='bg-danger text-white text-center position-absolute'>
+                        <p style={{left: 0, right: 0, top: 0}} className='bg-success text-white text-center position-absolute'>
                             Sayt test rejimida ishlamoqda
                         </p>
                         {children}

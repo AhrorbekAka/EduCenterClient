@@ -1,8 +1,7 @@
 import axios from 'axios'
 import {useRouter} from "next/router";
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {DOMAIN, queryData} from "../services/requestService";
-import Image from "next/image";
 import Layout from "../components/layout";
 
 export default function Home() {
@@ -10,7 +9,10 @@ export default function Home() {
     const [loading, setLoading] = useState(true)
     const [payload, setPayload] = useState({})
 
-    useEffect(()=>setLoading(false),[])
+    useEffect(()=>{
+        setLoading(false)
+    }, [])
+
 
     const changeHandler = (e) => {
         payload[e.target.name] = e.target.value
@@ -33,10 +35,10 @@ export default function Home() {
                     })
                 } else {
                     setPayload({})
+                    setLoading(false)
                 }
             }
         )
-        setLoading(false)
     }
 
     // if (loading) return (<div className='position-relative vh-100 vw-100 text-center'>
