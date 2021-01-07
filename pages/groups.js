@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react'
 import {Button, Card, CardBody, CardHeader, Col, Collapse, Container, Row,} from "reactstrap";
 import {queryData} from "../services/requestService";
 import StudentModal from "../components/modals/studentModal";
+import AddButton from "../components/buttons/addButton";
 
 export default function Groups() {
     const [loading, setLoading] = useState(true)
@@ -68,12 +69,12 @@ export default function Groups() {
                                                         <th>№</th>
                                                         <th>FIO</th>
                                                         <th>Telefon №</th>
-                                                        <th>
-                                                            <button onClick={() => {
-                                                                setStudentModal(true)
-                                                                setSelectedGroupId(group.id)
-                                                            }} className='badge badge-primary'><strong>+</strong>
-                                                            </button>
+                                                        <th className='pb-2'>
+                                                            <AddButton size={'18px'} style={{width: '40px'}}
+                                                                       submit={() => {
+                                                                           setStudentModal(true)
+                                                                           setSelectedGroupId(group.id)
+                                                                       }}/>
                                                         </th>
                                                     </tr>
                                                     </thead>
@@ -84,6 +85,7 @@ export default function Groups() {
                                                                     <td>{index + 1}</td>
                                                                     <td>{student.lastName + " " + student.firstName}</td>
                                                                     <td>{student.phoneNumber}</td>
+                                                                    <td> </td>
                                                                 </tr>
                                                             )) :
                                                             <tr>
