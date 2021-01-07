@@ -41,7 +41,7 @@ export default function Layout({children, home, loading, title}) {
                    alt="loading..."
                    width={40}
                    height={40}/>
-                   <br/>
+            <br/>
             <p className='pl-3 pt-3'> Loading . . .</p>
         </div>
     </div>)
@@ -53,6 +53,11 @@ export default function Layout({children, home, loading, title}) {
             </Head>
 
             {home && children}
+            {/*{!!home && <div className='w-100 position-relative'>*/}
+            {/*    <p*/}
+            {/*        style={{right: 0, left:0}}*/}
+            {/*        className='text-center text-white bg-warning position-absolute'>Sayt test*/}
+            {/*    rejimida ishlamoqda</p>{children}</div>}*/}
 
             {!home && (
                 <>
@@ -93,9 +98,12 @@ export default function Layout({children, home, loading, title}) {
                             </a>
                         </Link>
                     </div>
-                    <main className='vh-100 m-0 m-md-3 p-0 p-md-3'>{
-                        children
-                    }</main>
+                    <main className='vh-100 m-0 m-md-3 p-0 pt-3 p-md-3'>
+                        <p style={{left: 0, right: 0, top: 0}} className='bg-danger text-white text-center position-absolute'>
+                            Sayt test rejimida ishlamoqda
+                        </p>
+                        {children}
+                    </main>
                 </>
             )}
         </div>
