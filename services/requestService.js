@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 
-export const DOMAIN = "https://edu-centre.herokuapp.com";
-// export const DOMAIN = "http://localhost:";
+// export const DOMAIN = "https://edu-centre.herokuapp.com";
+export const DOMAIN = "http://localhost:";
 
 export function queryData(data) {
     let token = localStorage.getItem('EducationCenterToken');
