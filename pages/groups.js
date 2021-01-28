@@ -15,15 +15,37 @@ export default function Groups() {
     const [studentModal, setStudentModal] = useState(false)
     const [selectedGroupId, setSelectedGroupId] = useState('')
 
-    useEffect(() => {
-        requestGroupList()
+    const [attendanceList, setAttendanceList] = useState([])
+
+    useEffect(async () => {
+        console.log(new Date())
+        const a = await requestGroupList()
+        asd(a)
     }, [])
 
-    const requestGroupList = () => {
-        queryData({path: '/api/groups', method: 'get'}).then(res => {
-            setGroupList(res.data.object)
-            setLoading(false)
-        })
+    function asd(a){
+        let dateObj = new Date();
+        let month = dateObj.getUTCMonth() + 1; //months from 1-12
+        let day = dateObj.getUTCDate();
+        let year = dateObj.getUTCFullYear();
+
+        let newDate = year + "/" + month + "/" + day;
+        console.log(a[0].students[0].attendaces[0].createdAt);
+    }
+
+    const requestGroupList = async() => {
+        const res = await queryData({path: '/api/groups', method: 'get'})
+        setGroupList(res.data.object)
+        console.log(res.data.object)
+        setLoading(false)
+        return res.data.object
+    }
+
+    const onAttendanceClick = () => {
+
+    }
+
+    const onAttendanceDoubleClick = () => {
 
     }
 
@@ -68,7 +90,11 @@ export default function Groups() {
                                                     <tr>
                                                         <th>№</th>
                                                         <th>FIO</th>
-                                                        <th>Telefon №</th>
+                                                        {!group.students[0].attendances.length > 0 ?
+                                                            <th></th> : group.students[0].attendances.map((attendance, i) =>
+                                                                <th key={i}>{attendance.createdAt}</th>
+                                                            )}
+                                                        <th>Bugungi</th>
                                                         <th className='pb-2'>
                                                             <AddButton size={'18px'} style={{width: '40px'}}
                                                                        submit={() => {
@@ -84,8 +110,30 @@ export default function Groups() {
                                                                 <tr key={index}>
                                                                     <td>{index + 1}</td>
                                                                     <td>{student.lastName + " " + student.firstName}</td>
-                                                                    <td>{student.phoneNumber}</td>
-                                                                    <td> </td>
+                                                                    {!student.attendances.length > 0 ?
+                                                                        <td></td> : student.attendances.map(attendance =>
+                                                                            <td>
+                                                                                <span className={'border border-primary '+(
+                                                                                    attendance.absent && attendance.excusable ?
+                                                                                        'bg-warning border-warning' : attendance.absent ?
+                                                                                        'bg-danger border-danger' : 'bg-primary border-primary')
+                                                                                }
+                                                                                     style={{
+                                                                                         padding: '8px',
+                                                                                         borderRadius:'3px',
+                                                                                         display:'inline-block',
+                                                                                         verticalAlign: 'middle'
+                                                                                     }}
+                                                                                />
+                                                                            </td>)}
+                                                                    <td>
+                                                                        <button onClick={onAttendanceClick}
+                                                                                onDoubleClick={onAttendanceDoubleClick}
+                                                                                className='btn btn-primary'
+                                                                                style={{
+                                                                                    padding:'8px'
+                                                                                }}/>
+                                                                    </td>
                                                                 </tr>
                                                             )) :
                                                             <tr>

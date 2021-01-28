@@ -26,6 +26,7 @@ export default function Layout({children, home, loading, title}) {
     }
     const closeSidebar = () => {
         document.getElementById("sidebar").classList.remove(styles.w70)
+        loading = true
     }
 
     const logout = async () => {
@@ -84,6 +85,11 @@ export default function Layout({children, home, loading, title}) {
                             <Link href="/groups">
                                 <a className={styles.navLink}>
                                     <p>GURUHLAR</p>
+                                </a>
+                            </Link>
+                            <Link href="/testCRUD">
+                                <a className={styles.navLink}>
+                                    <p onClick={closeSidebar}>TEST</p>
                                 </a>
                             </Link>
                             <Link href="/settings">

@@ -1,0 +1,10 @@
+import {useState} from "react";
+
+let test = {questions:[]}
+export function store({payload, action}) {
+    if(action==='getTest'){
+        return test
+    } else if(action==='setTest'){
+        test = payload
+    }
+}
