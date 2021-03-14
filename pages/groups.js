@@ -111,7 +111,7 @@ export default function Groups() {
                                                                     <td>{index + 1}</td>
                                                                     <td>{student.lastName + " " + student.firstName}</td>
                                                                     {!student.attendances.length > 0 ?
-                                                                        <td></td> : student.attendances.map(attendance =>
+                                                                        <td> </td> : student.attendances.map(attendance =>
                                                                             <td>
                                                                                 <span className={'border border-primary '+(
                                                                                     attendance.absent && attendance.excusable ?

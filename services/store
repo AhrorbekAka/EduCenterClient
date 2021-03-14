@@ -1,10 +1,14 @@
-import {useState} from "react";
+let test = undefined
+let props = {}
 
-let test = {questions:[]}
 export function store({payload, action}) {
-    if(action==='getTest'){
+    if (action === 'getTest') {
         return test
-    } else if(action==='setTest'){
+    } else if (action === 'setTest') {
         test = payload
+    } else if (action === 'getProps') {
+        return props
+    } else if (action === 'setProps') {
+        props = payload
     }
 }

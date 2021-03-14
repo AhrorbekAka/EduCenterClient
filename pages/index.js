@@ -7,7 +7,9 @@ export default function Home() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        setLoading(false)
+        setTimeout(() => {
+            setLoading(false)
+        }, 3000)
     }, [])
 
     return (
@@ -18,28 +20,27 @@ export default function Home() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 height: '100vh',
-                overflow: 'hidden'
+                overflow: 'hidden',
             }}>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <div className="row mt-5">
-                    <div className="col-10 offset-1 col-md-4 offset-md-4">
-
-                        <div className='bg-transparent card text-center'>
-                            <div className="card-body p-2 p-md-3">
-                                <Link href="/test">
-                                    <a className='border border-primary px-3 py-2'>
-                                        Test
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                }}>
+                    <div>
+                        <div className="card-body p-2 p-md-3">
+                            <div style={{borderBottom: '6px solid LemonChiffon'}} className=' py-2 mb-5'>
+                                <Link href="/login">
+                                    <a style={{color: 'LemonChiffon'}}>
+                                        <h5>Log In</h5>
                                     </a>
                                 </Link>
-                                <Link href="/login">
-                                    <a className='border border-white text-white px-3 py-2'>
-                                        Log In
+                            </div>
+                            <div style={{borderBottom: '6px solid Cyan'}} className='py-2 mb-5'>
+                                <Link href="/test">
+                                    <a style={{color: 'Cyan'}}>
+                                        <h5>Test topshirish</h5>
                                     </a>
                                 </Link>
                             </div>

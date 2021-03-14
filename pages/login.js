@@ -46,34 +46,34 @@ export default function Home() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 height: '100vh',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                position: 'relative'
             }}>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <div className="row mt-5">
-                    <div className="col-10 offset-1 col-md-4 offset-md-4">
+                <div style={{
+                    width: '330px',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                }}>
+                    <div className='text-center'>
+                        <h3 className='text-monospace text-info'>Log In</h3>
+                        <div className="p-2 p-md-3">
+                            <input className='form-control form-group mt-2 w-100 text-center text-info'
+                                   onChange={(event) => changeHandler(event)}
+                                   value={payload.phoneNumber} type="text"
+                                   placeholder='Login'
+                                   name="phoneNumber"/>
+                            <input className='form-control form-group text-center text-danger'
+                                   onChange={(event) => changeHandler(event)}
+                                   value={payload.password}
+                                   placeholder='Password'
+                                   type="password"
+                                   name="password"/>
 
-                        <div className='card bg-transparent text-center'>
-                            <h3 className='card-header text-monospace text-info'>Log In</h3>
-                            <div className="card-body p-2 p-md-3">
-                                <input className='form-control form-group mt-2 text-center text-info'
-                                       onChange={(event) => changeHandler(event)}
-                                       value={payload.phoneNumber} type="text"
-                                       placeholder='Login'
-                                       name="phoneNumber"/>
-                                <input className='form-control form-group text-center text-danger'
-                                       onChange={(event) => changeHandler(event)}
-                                       value={payload.password}
-                                       placeholder='Password'
-                                       type="password"
-                                       name="password"/>
-
-                                <button onClick={login}
-                                        className='btn btn-primary bg-transparent form-group text-monospace'>Log In
-                                </button>
-                            </div>
+                            <button onClick={login}
+                                    className='btn btn-primary bg-transparent form-group text-monospace'>Log In
+                            </button>
                         </div>
                     </div>
                 </div>

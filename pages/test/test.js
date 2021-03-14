@@ -11,30 +11,36 @@ import {useEffect, useState} from "react";
 import {queryData, queryParam} from "../../services/requestService";
 import {store} from "../../services/store";
 import {useRouter} from "next/router";
-
-const LaTeX = 'We give illustrations for the three processes $alfa^+e^-$, gluon-gluon and $\\alfa\\gamma \\to W t\\bar b$.'
+import Timer from "../../components/timer";
 
 export default function Test() {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [test, setTest] = useState({})
     const [questions, setQuestions] = useState([])
     const [resAnswerList, setResAnswerList] = useState([])
     const [isTestDisabled, setTestDisabled] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
-    const answerIdList = useState([])
-
-    useEffect(() => {
-        const test = store({payload: '', action: 'getTest'})
-        setTest(test)
-        queryParam({path: '/api/question/by-test/'+test.id}).then(res=>{
-            if(res.status === 200) {
-                setQuestions(res.data.object)
-            }
-        })
-        setLoading(false)
-    }, [])
+    const [answerIdList, setAnswerIdList] = useState([])
 
     const router = useRouter()
+
+    useEffect(() => {
+        window.onbeforeunload = function() {
+            return "";
+        }.bind(this);
+        const test = store({payload: '', action: 'getTest'})
+        if (test !== undefined) {
+            setTest(test)
+            queryParam({path: '/api/question/by-test/' + test.id}).then(res => {
+                if (res.status === 200) {
+                    setQuestions(res.data.object)
+                    setLoading(false)
+                }
+            })
+        } else {
+            setLoading(false)
+        }
+    }, [])
 
     const back = () => {
         setTest({})
@@ -47,7 +53,7 @@ export default function Test() {
     }
 
     const onCheck = () => {
-        if (answerIdList.length === questions.length) {
+        if (answerIdList.length===questions.length && areAllSelected()) {
             setLoading(true)
             queryData({
                 path: '/api/test/check/' + test.phoneNumber + '/' + test.id,
@@ -57,9 +63,48 @@ export default function Test() {
                 setTestDisabled(true)
                 setResAnswerList(res.data.object)
                 setModalOpen(true)
+                test['time'] = 0
                 setLoading(false)
             })
+        } else {
+            alert('Natijani tekshirish uchun hamma savollarga javob berishingiz kerak!')
         }
+    }
+
+    const areAllSelected = () => {
+        for (let answerIdListElement of answerIdList) {
+            if(answerIdListElement===undefined) {
+                return false
+            }
+        }
+        return true
+    }
+
+    const stopTest = () => {
+        alert('time is up')
+        setLoading(true)
+        queryData({
+            path: '/api/test/check/' + test.phoneNumber + '/' + test.id,
+            method: 'patch',
+            idList: cleanAnswerIdList()
+        }).then(res => {
+            setTestDisabled(true)
+            setResAnswerList(res.data.object)
+            setModalOpen(true)
+            test['time'] = 0
+            setLoading(false)
+        })
+        setTestDisabled(true)
+    }
+
+    const cleanAnswerIdList = ()=> {
+        let idList=[]
+        for (let answerIdListElement of answerIdList) {
+            if(answerIdListElement!==undefined) {
+                idList.push(answerIdListElement)
+            }
+        }
+        return idList
     }
 
     return (
@@ -67,6 +112,9 @@ export default function Test() {
             <div className='container'>
                 <div className='text-right container mt-3'>
                     <button onClick={back} className='btn btn-outline-primary py-1'>{'<- ortga'}</button>
+                </div>
+                <div className='my-3 text-right'>
+                    {test.time && <Timer time={test.time} stopTest={stopTest}/>}
                 </div>
                 <div>
                     <h3 className='text-center'>{test.title}</h3>
@@ -113,15 +161,20 @@ export default function Test() {
                             )}
                         </FormGroup>
                     )}
-                    <Button
-                        onClick={!isTestDisabled ? onCheck : back}>
-                        {!isTestDisabled ? 'Testni yakunlash' : 'Chiqish'}
-                    </Button>
+                    <div className='text-right mb-3'>
+                        <Button
+                            color={'primary'}
+                            onClick={!isTestDisabled ? onCheck : back}>
+                            {!isTestDisabled ? 'Testni yakunlash' : 'Chiqish'}
+                        </Button>
+                    </div>
 
                     <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} unmountOnClose={true}>
                         <ModalBody>
                             <h3
-                                className={resAnswerList.length > 22 ? 'text-success' : (resAnswerList.length > 15 ? 'text-warning' : 'text-danger') + ' text-center'}>
+                                className={resAnswerList.length%questions.length*100 > 80 ?
+                                    'text-success' :
+                                    (resAnswerList.length%questions.length*100 > 60 ? 'text-warning' : 'text-danger') + ' text-center'}>
                                 {resAnswerList.length}<i> ta to`g`ri javob</i>
                             </h3>
                         </ModalBody>
