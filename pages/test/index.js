@@ -85,14 +85,14 @@ export default function TestIndex() {
             <Layout home loading={loading}>
                 <div className='container'>
                     <div className='pt-5 text-center'>
-                        <div className='mb-3'>
+                        <div className='mb-3 text-white'>
                             <Link href='/'>
                                 <a>
                                     Home
                                 </a>
                             </Link>
                         </div>
-                        <Label className='mr-3 text-md-left'>
+                        <Label className='mr-3 text-md-left text-white'>
                             <p>Telefon №</p>
                             <InputGroup>
                                 <Input type="text" name="phoneNumber" defaultValue='+998'
