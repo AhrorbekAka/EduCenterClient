@@ -152,7 +152,7 @@ export default function Test() {
                                         )
                                     }
                                     <Label onClick={(event) => onSelectAnswer(index, answer.id, event)} key={i} check
-                                           className='mx-1'>
+                                           className='mx-1 w-100'>
                                         <Input disabled={isTestDisabled} type="radio" name={question.question}/>
                                         {' ' + (i === 0 ? 'A' : i === 1 ? 'B' : i === 2 ? 'C' : 'D') + ')  '}
                                         <Latex strict>{answer.answer}</Latex>
