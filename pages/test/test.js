@@ -25,7 +25,7 @@ export default function Test() {
     const router = useRouter()
 
     useEffect(() => {
-        window.onbeforeunload = function() {
+        window.onbeforeunload = function () {
             return "";
         }.bind(this);
         const test = store({payload: '', action: 'getTest'})
@@ -53,7 +53,7 @@ export default function Test() {
     }
 
     const onCheck = () => {
-        if (answerIdList.length===questions.length && areAllSelected()) {
+        if (answerIdList.length === questions.length && areAllSelected()) {
             setLoading(true)
             queryData({
                 path: '/api/test/check/' + test.phoneNumber + '/' + test.id,
@@ -73,7 +73,7 @@ export default function Test() {
 
     const areAllSelected = () => {
         for (let answerIdListElement of answerIdList) {
-            if(answerIdListElement===undefined) {
+            if (answerIdListElement === undefined) {
                 return false
             }
         }
@@ -97,10 +97,10 @@ export default function Test() {
         setTestDisabled(true)
     }
 
-    const cleanAnswerIdList = ()=> {
-        let idList=[]
+    const cleanAnswerIdList = () => {
+        let idList = []
         for (let answerIdListElement of answerIdList) {
-            if(answerIdListElement!==undefined) {
+            if (answerIdListElement !== undefined) {
                 idList.push(answerIdListElement)
             }
         }
@@ -161,20 +161,20 @@ export default function Test() {
                             )}
                         </FormGroup>
                     )}
-                    <div className='text-right mb-3'>
+                    {questions.length > 0 && <div className='text-right mb-3'>
                         <Button
                             color={'primary'}
                             onClick={!isTestDisabled ? onCheck : back}>
                             {!isTestDisabled ? 'Testni yakunlash' : 'Chiqish'}
                         </Button>
-                    </div>
+                    </div>}
 
                     <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} unmountOnClose={true}>
                         <ModalBody>
                             <h3
-                                className={resAnswerList.length%questions.length*100 > 80 ?
+                                className={resAnswerList.length % questions.length * 100 > 80 ?
                                     'text-success' :
-                                    (resAnswerList.length%questions.length*100 > 60 ? 'text-warning' : 'text-danger') + ' text-center'}>
+                                    (resAnswerList.length % questions.length * 100 > 60 ? 'text-warning' : 'text-danger') + ' text-center'}>
                                 {resAnswerList.length}<i> ta to`g`ri javob</i>
                             </h3>
                         </ModalBody>
