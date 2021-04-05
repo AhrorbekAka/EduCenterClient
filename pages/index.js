@@ -15,11 +15,11 @@ export default function Home() {
     return (
         <Layout loading={loading} home>
             <div style={{
-                backgroundImage: `url('./login-bg.jpg')`,
-                backgroundRepeat: 'no-repeat',
+                backgroundColor: '#0093E9',
+                backgroundImage: 'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                height: '100vh',
+                minHeight: '100vh',
                 overflow: 'hidden',
             }}>
                 <div style={{
