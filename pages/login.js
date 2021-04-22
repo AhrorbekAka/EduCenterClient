@@ -35,7 +35,10 @@ export default function Home() {
                     setLoading(false)
                 }
             }
-        )
+        ).catch(res=> {
+            console.log(res)
+            setLoading(false)
+        })
     }
 
     return (

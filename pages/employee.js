@@ -141,6 +141,7 @@ export default function Employee() {
                     isOpen={modal}
                     setOpen={setModal}
                     user={user}
+                    isDirector={directorId.length>0}
                     refresh={requestEmployeeList}
                 />}
             </div>

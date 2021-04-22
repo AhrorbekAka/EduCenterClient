@@ -246,7 +246,9 @@ export default function Students() {
                                                                     <button
                                                                         onClick={() => openPaymentModal(student, group)}
                                                                         className={(student.balance >= 0 ? 'btn btn-success' : 'btn btn-danger')}>
-                                                                        {student.balance.toLocaleString()}
+                                                                        {/*{console.log(student)}*/}
+                                                                        {/*{student.balance}*/}
+                                                                        {student.balance!=null?student.balance.toLocaleString():0}
                                                                     </button>
                                                                 </td>
                                                                 <td>{student.phoneNumber}</td>

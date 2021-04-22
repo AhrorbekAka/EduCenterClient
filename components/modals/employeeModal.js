@@ -3,7 +3,7 @@ import AbstractModal from "./abstractModal";
 import {Button, FormGroup, Input, InputGroup, InputGroupAddon, ModalBody} from "reactstrap";
 import {queryData} from "../../services/requestService";
 
-export default function EmployeeModal({isOpen, setOpen, user, refresh}) {
+export default function EmployeeModal({isOpen, setOpen, user, isDirector, refresh}) {
     const [loading, setLoading] = useState(false)
     const [passwordLocked, setPasswordLocked] = useState(true)
 
@@ -15,13 +15,13 @@ export default function EmployeeModal({isOpen, setOpen, user, refresh}) {
             lastName: document.getElementsByName('lastName')[0].value,
             roleName: document.getElementsByName("roleName")[0].value,
             phoneNumber: document.getElementsByName('phoneNumber')[0].value,
-            password: passwordLocked?'':document.getElementsByName('password')[0].value,
+            password: passwordLocked ? '' : document.getElementsByName('password')[0].value,
         };
         await queryData({
             path: '/api/user',
             method: 'post',
             ...newUser
-        });
+        }).catch(res=>console.log(res));
         await refresh(true)
         setOpen(false)
         setLoading(false)
@@ -47,8 +47,12 @@ export default function EmployeeModal({isOpen, setOpen, user, refresh}) {
             </FormGroup>
             <FormGroup>
                 <Input type="select" name="roleName" defaultValue={user.roles && user.roles[0].name}>
-                    <option selected={true}>TEACHER</option>
-                    <option>ADMIN</option>
+                    {isDirector ? <option value="" selected={true} disabled>DIRECTOR</option> :
+                        <>
+                            <option selected={true}>TEACHER</option>
+                            <option>ADMIN</option>
+                        </>
+                    }
                 </Input>
             </FormGroup>
             <FormGroup>
