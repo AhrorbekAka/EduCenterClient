@@ -18,7 +18,7 @@ export default function Groups() {
     const [attendanceList, setAttendanceList] = useState([])
 
     useEffect(async () => {
-        console.log(new Date())
+        // console.log(new Date())
         const a = await requestGroupList()
         asd(a)
     }, [])
@@ -30,13 +30,12 @@ export default function Groups() {
         let year = dateObj.getUTCFullYear();
 
         let newDate = year + "/" + month + "/" + day;
-        console.log(a[0].students[0].attendaces[0].createdAt);
+        // console.log(a[0].students[0].attendaces[0].createdAt);
     }
 
     const requestGroupList = async() => {
         const res = await queryData({path: '/api/groups', method: 'get'})
         setGroupList(res.data.object)
-        console.log(res.data.object)
         setLoading(false)
         return res.data.object
     }
@@ -90,10 +89,11 @@ export default function Groups() {
                                                     <tr>
                                                         <th>№</th>
                                                         <th>FIO</th>
-                                                        {!group.students[0].attendances.length > 0 ?
-                                                            <th></th> : group.students[0].attendances.map((attendance, i) =>
-                                                                <th key={i}>{attendance.createdAt}</th>
-                                                            )}
+                                                        {/*{!group.students[0].attendances.length > 0 ?*/}
+                                                        {/*    <th></th> : */}
+                                                        {/*    {group.students[0].attendances.map((attendance, i) =>*/}
+                                                        {/*        <th key={i}>{attendance.createdAt}</th>*/}
+                                                        {/*    )}*/}
                                                         <th>Bugungi</th>
                                                         <th className='pb-2'>
                                                             <AddButton size={'18px'} style={{width: '40px'}}
@@ -110,22 +110,22 @@ export default function Groups() {
                                                                 <tr key={index}>
                                                                     <td>{index + 1}</td>
                                                                     <td>{student.lastName + " " + student.firstName}</td>
-                                                                    {!student.attendances.length > 0 ?
-                                                                        <td> </td> : student.attendances.map(attendance =>
-                                                                            <td>
-                                                                                <span className={'border border-primary '+(
-                                                                                    attendance.absent && attendance.excusable ?
-                                                                                        'bg-warning border-warning' : attendance.absent ?
-                                                                                        'bg-danger border-danger' : 'bg-primary border-primary')
-                                                                                }
-                                                                                     style={{
-                                                                                         padding: '8px',
-                                                                                         borderRadius:'3px',
-                                                                                         display:'inline-block',
-                                                                                         verticalAlign: 'middle'
-                                                                                     }}
-                                                                                />
-                                                                            </td>)}
+                                                                    {/*{!student.attendances.length > 0 ?*/}
+                                                                    {/*    <td> </td> : student.attendances.map(attendance =>*/}
+                                                                    {/*        <td>*/}
+                                                                    {/*            <span className={'border border-primary '+(*/}
+                                                                    {/*                attendance.absent && attendance.excusable ?*/}
+                                                                    {/*                    'bg-warning border-warning' : attendance.absent ?*/}
+                                                                    {/*                    'bg-danger border-danger' : 'bg-primary border-primary')*/}
+                                                                    {/*            }*/}
+                                                                    {/*                 style={{*/}
+                                                                    {/*                     padding: '8px',*/}
+                                                                    {/*                     borderRadius:'3px',*/}
+                                                                    {/*                     display:'inline-block',*/}
+                                                                    {/*                     verticalAlign: 'middle'*/}
+                                                                    {/*                 }}*/}
+                                                                    {/*            />*/}
+                                                                    {/*        </td>)}*/}
                                                                     <td>
                                                                         <button onClick={onAttendanceClick}
                                                                                 onDoubleClick={onAttendanceDoubleClick}

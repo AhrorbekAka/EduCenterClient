@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-
+//errorda asosiy sahifaga qaytadigan qilib qo`yishim kerak
 export const DOMAIN = "https://edu-centre.herokuapp.com";
 // export const DOMAIN = "http://localhost:";
 

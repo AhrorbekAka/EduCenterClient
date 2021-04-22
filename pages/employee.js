@@ -71,7 +71,7 @@ export default function Employee() {
             path: '/api/user/disable',
             method: 'patch',
             userId: userId
-        }).then(res => requestEmployeeList(!isDeletedPage))
+        }).then(() => requestEmployeeList(!isDeletedPage))
             .catch(error => console.log(error))
     }
 
