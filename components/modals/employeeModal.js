@@ -3,7 +3,7 @@ import AbstractModal from "./abstractModal";
 import {Button, FormGroup, Input, InputGroup, InputGroupAddon, ModalBody} from "reactstrap";
 import {queryData} from "../../services/requestService";
 
-export default function EmployeeModal({isOpen, setOpen, user, isDirector, refresh}) {
+export default function EmployeeModal({isOpen, setOpen, setUser, user, refresh}) {
     const [loading, setLoading] = useState(false)
     const [passwordLocked, setPasswordLocked] = useState(true)
 
@@ -23,9 +23,14 @@ export default function EmployeeModal({isOpen, setOpen, user, isDirector, refres
             ...newUser
         }).catch(res=>console.log(res));
         await refresh(true)
-        setOpen(false)
+        closeModal()
         setLoading(false)
     };
+
+    const closeModal = ()=> {
+        setOpen(false)
+        setUser({id: null})
+    }
 
     const unlockChangePassword = () => {
         const newPassword = document.getElementsByName('password')[0].value
@@ -36,7 +41,7 @@ export default function EmployeeModal({isOpen, setOpen, user, isDirector, refres
     }
 
     return (
-        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={onSave} loading={loading}>
+        <AbstractModal isOpen={isOpen} setOpen={closeModal} submit={onSave} loading={loading}>
             <FormGroup>
                 <Input type="text" defaultValue={user.firstName} name="firstName"
                        placeholder="Ism"/>
@@ -47,9 +52,9 @@ export default function EmployeeModal({isOpen, setOpen, user, isDirector, refres
             </FormGroup>
             <FormGroup>
                 <Input type="select" name="roleName" defaultValue={user.roles && user.roles[0].name}>
-                    {isDirector ? <option value="" selected={true} disabled>DIRECTOR</option> :
+                    {user.roles && user.roles[0].name==='DIRECTOR' ? <option value="" selected={true} disabled>DIRECTOR</option> :
                         <>
-                            <option selected={true}>TEACHER</option>
+                            <option>TEACHER</option>
                             <option>ADMIN</option>
                         </>
                     }

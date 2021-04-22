@@ -18,8 +18,7 @@ export default function Employee() {
     const [directorId, setDirectorId] = useState('')
 
     useEffect(() => {
-        requestEmployeeList(true).then(res=>checkIfDirector(res))
-        // checkIfDirector(users)
+        requestEmployeeList(true).then(res=>setDirectorIdIfPresent(res))
     }, [])
 
     const requestEmployeeList = async (isEnabled) => {
@@ -29,14 +28,24 @@ export default function Employee() {
         return res.data.object
     }
 
-    const checkIfDirector = (users) => {
+    const setDirectorIdIfPresent = (users) => {
         for (let user of users) {
+            checkIfDirector(user)?setDirectorId(user.id):''
             for (let role of user.roles) {
                 if (role.name === "DIRECTOR") {
                     setDirectorId(user.id)
                 }
             }
         }
+    }
+
+    const checkIfDirector = (user) => {
+        for (let role of user.roles) {
+            if (role.name === "DIRECTOR") {
+                return true
+            }
+        }
+        return false
     }
 
     const changePage = () => {
@@ -47,8 +56,8 @@ export default function Employee() {
 
     const openModal = () => setModal(true);
 
-    const onEdit = (user) => {
-        setUser(user)
+    const onEdit = (selectedUser) => {
+        setUser(selectedUser)
         openModal()
     };
 
@@ -140,8 +149,8 @@ export default function Employee() {
                 {modal && <EmployeeModal
                     isOpen={modal}
                     setOpen={setModal}
+                    setUser={setUser}
                     user={user}
-                    isDirector={directorId.length>0}
                     refresh={requestEmployeeList}
                 />}
             </div>
