@@ -130,7 +130,7 @@ export default function Layout({children, home, loading, title}) {
                             </Link>
                         </div>
                     </div>
-                    <main className='min-vh-100 m-0 ml-md-5 p-0 p-md-3 pt-4 mt-4'>
+                    <main className='min-vh-100 m-0 ml-md-5 p-0 p-md-3 pt-5' style={{boxSizing: 'border-box'}}>
                         <p style={{left: 0, right: 0, top: 0}}
                            className='bg-success text-white text-center position-absolute'>
                             Sayt test rejimida ishlamoqda
