@@ -16,7 +16,7 @@ export default function LoginLayout({children}) {
                             </Link>
                         </div>
                     </div>
-                    <div className='h-100 mt-md-5 pt col-md-6 bg-light d-flex'>
+                    <div className='h-100 mt-md-5 col-md-6 bg-light d-flex'>
                         {children}
                     </div>
                 </div>

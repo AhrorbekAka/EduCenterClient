@@ -227,9 +227,9 @@ export default function Students() {
                                                     <th>№</th>
                                                     <th>FIO</th>
                                                     <th>Balance</th>
-                                                    <th>Telefon №</th>
-                                                    <th className='d-none d-md-table-cell'>Ota(Ona)sining raqami</th>
-                                                    <th className='d-none d-md-table-cell'>Address</th>
+                                                    {/*<th>Telefon №</th>*/}
+                                                    {/*<th className='d-none d-md-table-cell'>Ota(Ona)sining raqami</th>*/}
+                                                    {/*<th className='d-none d-md-table-cell'>Address</th>*/}
                                                     <th className='pb-2'>
                                                         <AddButton style={{width: '60px'}}
                                                                    submit={() => createStudent(group.id)}/>
@@ -251,9 +251,9 @@ export default function Students() {
                                                                         {student.balance!=null?student.balance.toLocaleString():0}
                                                                     </button>
                                                                 </td>
-                                                                <td>{student.phoneNumber}</td>
-                                                                <td className='d-none d-md-table-cell'>{student.parentsNumber}</td>
-                                                                <td className='d-none d-md-table-cell'>{student.address}</td>
+                                                                {/*<td>{student.phoneNumber}</td>*/}
+                                                                {/*<td className='d-none d-md-table-cell'>{student.parentsNumber}</td>*/}
+                                                                {/*<td className='d-none d-md-table-cell'>{student.address}</td>*/}
                                                                 <td>
                                                                     <DeleteButton
                                                                         submit={() => onDeleteStudent(student.id)}
