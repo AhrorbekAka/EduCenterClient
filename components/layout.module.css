@@ -26,6 +26,7 @@
     transition-timing-function: ease-in-out;
     background-color: #a8dadc;
     overflow: hidden;
+    box-shadow: 0 0 8px 0 #1d3557;
 }
 
 .logo{
