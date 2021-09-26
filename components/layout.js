@@ -34,10 +34,12 @@ export default function Layout({children, home, loading, title}) {
 
     const openSidebar = () => {
         document.getElementById("sidebar").classList.add(styles.w70)
+        setIsOpen(true)
         // document.getElementById("logo").innerText = 'O`QUV \n MARKAZI'
     }
     const closeSidebar = () => {
         document.getElementById("sidebar").classList.remove(styles.w70)
+        setIsOpen(false)
         // document.getElementById("logo").innerText = ''
 
         loading = true
@@ -130,7 +132,7 @@ export default function Layout({children, home, loading, title}) {
                             </Link>
                         </div>
                     </div>
-                    <main className='min-vh-100 m-0 ml-md-5 p-0 p-md-3 pt-5' style={{boxSizing: 'border-box'}}>
+                    <main onClick={closeSidebar} className='min-vh-100 m-0 ml-md-5 p-0 p-md-3 pt-5' style={{boxSizing: 'border-box'}}>
                         <p style={{left: 0, right: 0, top: 0}}
                            className='bg-success text-white text-center position-absolute'>
                             Sayt test rejimida ishlamoqda
