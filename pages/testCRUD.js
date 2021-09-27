@@ -175,7 +175,7 @@ export default function TestCrud() {
     }
 
     return (
-        <Layout loading={loading}>
+        <Layout loading={loading} title={"Test"}>
             <div className='container pt-3'>
                 <FormGroup>
                     <Label>

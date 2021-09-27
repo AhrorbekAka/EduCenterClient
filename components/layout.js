@@ -35,13 +35,10 @@ export default function Layout({children, home, loading, title}) {
     const openSidebar = () => {
         document.getElementById("sidebar").classList.add(styles.w70)
         setIsOpen(true)
-        // document.getElementById("logo").innerText = 'O`QUV \n MARKAZI'
     }
     const closeSidebar = () => {
         document.getElementById("sidebar").classList.remove(styles.w70)
         setIsOpen(false)
-        // document.getElementById("logo").innerText = ''
-
         loading = true
     }
 
@@ -72,67 +69,74 @@ export default function Layout({children, home, loading, title}) {
 
             {!home && (
                 <div>
-                    <div id="sidebar" className={styles.sidebar+' justify-content-center'}>
+                    <div id="sidebar" className={styles.sidebar + ' justify-content-center'}>
                         <div className='btn d-none d-md-inline-block bg-transparent text-white' onClick={toggleSidebar}>
                             <FontAwesomeIcon className='m-2' style={{fontSize: '30px'}} icon={faBars}/>
                         </div>
-                        <h2 className={styles.logo+ ' d-none d-md-block'}>O`QUV <br/> MARKAZI</h2>
+                        <div>
+                            <h2 className={styles.logo+' pl-2 pb-0 mb-1'}>O`QUV MARKAZI</h2>
+                            <div className={styles.settingsLogout + ' d-flex d-md-block'}>
+                                <Link href="/settings">
+                                    <a>
+                                        <p className={styles.navLink + ' ' + (title === 'Sozlamalar' ? styles.currentPage : '')}
+                                           onClick={closeSidebar}>
+                                            <FontAwesomeIcon className='mx-2 mx-md-4' icon={faCog}/>
+                                            <span style={{display: !isOpen ? 'none' : ''}}>Sozlamalar</span>
+                                        </p>
+                                    </a>
+                                </Link>
+                                <Link href="/">
+                                    <a onClick={logout}>
+                                        <p className={styles.navLink}>
+                                            <FontAwesomeIcon className='mx-2 mx-md-4' icon={faSignOutAlt}/>
+                                            <span style={{display: !isOpen ? 'none' : ''}}>Chiqish</span>
+                                        </p>
+                                    </a>
+                                </Link>
+                            </div>
+                        </div>
 
-                        {menu > 1 && <Link href="/students">
-                            <a>
-                                <p className={styles.navLink+' px-2 pl-md-1'}>
-                                    <FontAwesomeIcon className='my-md-1 mx-md-4' icon={faUserGraduate}/>
-                                    <span>Studentlar</span>
-                                </p>
-                            </a>
-                        </Link>}
-                        {menu > 2 && <Link href="/employee">
-                            <a>
-                                <p className={styles.navLink+' px-2 px-md-0'}>
-                                    <FontAwesomeIcon className='my-md-1 mx-md-4' icon={faChalkboardTeacher}/>
-                                    <span>Ishchilar</span>
-                                </p>
-                            </a>
-                        </Link>}
-                        {menu > 0 && <>
-                            <Link href="/groups">
+                        <div className='d-flex d-md-block'>
+                            {menu > 1 && <Link href="/students">
                                 <a>
-                                    <p className={styles.navLink+' px-2 px-md-0'}>
-                                        <FontAwesomeIcon className='my-md-2 mx-md-4' icon={faUsers}/>
-                                        <span>Guruhlar</span>
+                                    <p className={styles.navLink + ' px-3 pl-md-1 ' + (title === 'Studentlar' ? styles.currentPage : '')}>
+                                        <FontAwesomeIcon className='my-md-1 mx-md-4' icon={faUserGraduate}/>
+                                        <span>Studentlar</span>
                                     </p>
                                 </a>
-                            </Link>
-                            <Link href="/testCRUD">
+                            </Link>}
+                            {menu > 2 && <Link href="/employee">
                                 <a>
-                                    <p className={styles.navLink+' px-2 pl-md-1 mr-5 mr-md-0'} onClick={closeSidebar}>
-                                        <FontAwesomeIcon className='my-md-2 mx-md-4' icon={faPlusSquare}/>
-                                        <span>Test yaratish</span>
+                                    <p className={styles.navLink + ' px-3 px-md-0 ' + (title === 'Ishchilar' ? styles.currentPage : '')}>
+                                        <FontAwesomeIcon className='my-md-1 mx-md-4' icon={faChalkboardTeacher}/>
+                                        <span>Ishchilar</span>
                                     </p>
                                 </a>
-                            </Link>
+                            </Link>}
+                            {menu > 0 && <>
+                                <Link href="/groups">
+                                    <a>
+                                        <p className={styles.navLink + ' px-3 px-md-0 ' + (title === 'Guruhlar' ? styles.currentPage : '')}>
+                                            <FontAwesomeIcon className='my-md-2 mx-md-4' icon={faUsers}/>
+                                            <span>Guruhlar</span>
+                                        </p>
+                                    </a>
+                                </Link>
+                                <Link href="/testCRUD">
+                                    <a>
+                                        <p className={styles.navLink + ' px-3 pl-md-1 mr-5 mr-md-0 ' + (title === 'Test' ? styles.currentPage : '')}
+                                           onClick={closeSidebar}>
+                                            <FontAwesomeIcon className='my-md-2 mx-md-4' icon={faPlusSquare}/>
+                                            <span>Test yaratish</span>
+                                        </p>
+                                    </a>
+                                </Link>
 
-                        </>}
-                        <div className={styles.settingsLogout +' d-flex d-md-block'}>
-                            <Link href="/settings">
-                                <a>
-                                    <p className={styles.navLink} onClick={closeSidebar}>
-                                        <FontAwesomeIcon className='mx-2 mx-md-4' icon={faCog}/>
-                                        <span style={{display: !isOpen ? 'none' : ''}}>Sozlamalar</span>
-                                    </p>
-                                </a>
-                            </Link>
-                            <Link href="/">
-                                <a onClick={logout}>
-                                    <p className={styles.navLink}>
-                                        <FontAwesomeIcon className='mx-2 mx-md-4' icon={faSignOutAlt}/>
-                                        <span style={{display: !isOpen ? 'none' : ''}}>Chiqish</span>
-                                    </p>
-                                </a>
-                            </Link>
+                            </>}
                         </div>
                     </div>
-                    <main onClick={closeSidebar} className='min-vh-100 m-0 ml-md-5 p-0 p-md-3 pt-5' style={{boxSizing: 'border-box'}}>
+                    <main onClick={closeSidebar} className='min-vh-100 m-0 ml-md-5 p-0 p-md-3 pt-5'
+                          style={{boxSizing: 'border-box'}}>
                         <p style={{left: 0, right: 0, top: 0}}
                            className='bg-success text-white text-center position-absolute'>
                             Sayt test rejimida ishlamoqda

@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('../public/Ubuntu/Ubuntu-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Ubuntu-Regular';
+    src: url('../public/Ubuntu/Ubuntu-Regular.ttf') format('truetype');
+}
+
 .container {
     min-height: 100vh;
     margin: 0;
@@ -13,14 +23,13 @@
 }
 
 .sidebar {
-    font-family: "Tahoma","Bell MT", sans-serif!important;
+    font-family: "Ubuntu","Times New Roman", sans-serif!important;
     padding: 5px 0;
-    height: 50px;
+    height: 60px;
     z-index: 5;
     top: 0;
     right: 0;
     width: 100%;
-    display: flex;
     position: fixed;
     transition-duration: 0.4s;
     transition-timing-function: ease-in-out;
@@ -30,25 +39,26 @@
 }
 
 .logo{
-    height: 70px;
-    font-family: "Tahoma", "Bell MT", sans-serif!important;
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 600;
-    margin: 0 50px 30px 68px;
     color: #1d3557;
-    text-align: center;
 }
 
 .navLink {
+    font-family: "Ubuntu-Regular", "Times New Roman", sans-serif;
     text-align: center;
-    font-family: 'Tahoma', "Bell MT", sans-serif;
     font-size: 15px;
-    color: #1d3557;
+    color: #5a5e62;
 }
 
 .navLink>span {
     font-size: 13px;
     display: block;
+}
+
+.currentPage {
+    font-size: 18px!important;
+    color: #1d3557 !important;
 }
 
 .children {
@@ -60,7 +70,8 @@
 
 .settingsLogout {
     position: fixed;
-    padding-top: 15px;
+    padding-top: 5px;
+    top:0;
     right: 0;
 }
 
@@ -73,6 +84,12 @@
         width: 68px;
         display:block;
         left: 0;
+    }
+
+    .logo {
+        height: 70px;
+        font-size: 30px;
+        margin: 0 50px 30px 68px;
     }
 
     .navLink {
@@ -89,9 +106,13 @@
         font-size: 20px;
     }
 
+    .currentPage {
+        font-size: 24px!important;
+    }
+
     .settingsLogout {
         position: fixed;
         left:0;
-        bottom: 0;
+        top: 85vh;
     }
 }
