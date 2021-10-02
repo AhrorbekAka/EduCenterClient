@@ -5,19 +5,22 @@ import Link from "next/link";
 import Image from "next/image";
 
 import {
-    faBars, faChalkboardTeacher,
+    faBars,
+    faChalkboardTeacher,
     faCog,
-    faLayerGroup,
     faPlusSquare,
-    faSignOutAlt, faUserGraduate,
-    faUsers,
-    faUserShield
+    faSignOutAlt,
+    faUserGraduate,
+    faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {FormGroup, Input} from "reactstrap";
+import {queryParam} from "../services/requestService";
 
 export default function Layout({children, home, loading, title}) {
     const [isOpen, setIsOpen] = useState(false)
     const [menu, setMenu] = useState([])
+    const [pageStudent, setPageStudent] = useState({content: [{lastName: '', firstName: ''}]})
 
     useEffect(async () => {
         await setMenu(localStorage.getItem('menu'))
@@ -47,6 +50,15 @@ export default function Layout({children, home, loading, title}) {
         localStorage.removeItem("menu")
     }
 
+    const findStudent = async (e) => {
+        if (e.target.value.length > 2) {
+            const res = await queryParam({path: "/api/student/search", method: 'get', search: e.target.value})
+            setPageStudent(res.data.object)
+        } else {
+            setPageStudent({content: [{lastName: '', firstName: ''}]})
+        }
+    }
+
     if (loading) return (<div className='position-relative vh-100 vw-100 text-center'>
         <div
             className='position-absolute'
@@ -69,12 +81,26 @@ export default function Layout({children, home, loading, title}) {
 
             {!home && (
                 <div>
-                    <div id="sidebar" className={styles.sidebar + ' justify-content-center'}>
-                        <div className='btn d-none d-md-inline-block bg-transparent text-white' onClick={toggleSidebar}>
+                    <div id="sidebar" className={styles.sidebar}>
+                        <div className='btn d-none d-md-inline-block bg-transparent text-white pr-md-0'
+                             onClick={toggleSidebar}>
                             <FontAwesomeIcon className='m-2' style={{fontSize: '30px'}} icon={faBars}/>
                         </div>
-                        <div>
-                            <h2 className={styles.logo+' pl-2 pb-0 mb-1'}>O`QUV MARKAZI</h2>
+                        <FormGroup className='w-75 d-inline-block ml-1 my-1 my-md-0 ml-md-2'>
+                            <datalist id="findStudentOption">
+                                {
+                                    pageStudent.content.map((stud, index) =>
+                                        <option key={index}
+                                                value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
+                                }
+                            </datalist>
+
+                            <Input list="findStudentOption" onChange={(event) => findStudent(event)} type="text"
+                                   name="lastName"
+                                   placeholder="Familiya, ism, ..."/>
+                        </FormGroup>
+                        <div className=''>
+                            <h2 className={styles.logo + ' pl-2 pb-2 pt-1 pt-md-0 d-none d-md-block'}>O`quv markazi</h2>
                             <div className={styles.settingsLogout + ' d-flex d-md-block'}>
                                 <Link href="/settings">
                                     <a>
@@ -96,49 +122,55 @@ export default function Layout({children, home, loading, title}) {
                             </div>
                         </div>
 
-                        <div className='d-flex d-md-block'>
-                            {menu > 1 && <Link href="/students">
-                                <a>
-                                    <p className={styles.navLink + ' px-3 pl-md-1 ' + (title === 'Studentlar' ? styles.currentPage : '')}>
-                                        <FontAwesomeIcon className='my-md-1 mx-md-4' icon={faUserGraduate}/>
-                                        <span>Studentlar</span>
-                                    </p>
-                                </a>
-                            </Link>}
-                            {menu > 2 && <Link href="/employee">
-                                <a>
-                                    <p className={styles.navLink + ' px-3 px-md-0 ' + (title === 'Ishchilar' ? styles.currentPage : '')}>
-                                        <FontAwesomeIcon className='my-md-1 mx-md-4' icon={faChalkboardTeacher}/>
-                                        <span>Ishchilar</span>
-                                    </p>
-                                </a>
-                            </Link>}
-                            {menu > 0 && <>
+                        <div className={styles.navBlock + ' row py-1'}>
+                            {menu > 1 && <div className={(menu === 2 ? 'col-4' : 'col-3') + ' col-md-12'}>
+                                <Link href="/students">
+                                    <a>
+                                        <p className={styles.navLink + ' ' + (title === 'Studentlar' ? styles.currentPage : '')}>
+                                            <FontAwesomeIcon className='my-md-1 ml-md-2 mr-md-4' icon={faUserGraduate}/>
+                                            <span>Studentlar</span>
+                                        </p>
+                                    </a>
+                                </Link>
+                            </div>}
+                            {menu > 2 && <div className={'col-3 col-md-12'}>
+                                <Link href="/employee">
+                                    <a>
+                                        <p className={styles.navLink + ' ' + (title === 'Ishchilar' ? styles.currentPage : '')}>
+                                            <FontAwesomeIcon className='my-md-1 ml-md-2 mr-md-4'
+                                                             icon={faChalkboardTeacher}/>
+                                            <span>Ishchilar</span>
+                                        </p>
+                                    </a>
+                                </Link>
+                            </div>}
+                            {menu > 0 && <div className={(menu === 2 ? 'col-4' : 'col-3') + ' col-md-12'}>
                                 <Link href="/groups">
                                     <a>
-                                        <p className={styles.navLink + ' px-3 px-md-0 ' + (title === 'Guruhlar' ? styles.currentPage : '')}>
-                                            <FontAwesomeIcon className='my-md-2 mx-md-4' icon={faUsers}/>
+                                        <p className={styles.navLink + ' ' + (title === 'Guruhlar' ? styles.currentPage : '')}>
+                                            <FontAwesomeIcon className='my-md-2 ml-md-2 mr-md-4' icon={faUsers}/>
                                             <span>Guruhlar</span>
                                         </p>
                                     </a>
                                 </Link>
+                            </div>}
+                            {menu > 0 && <div className={(menu === 2 ? 'col-4' : 'col-3') + ' col-md-12'}>
                                 <Link href="/testCRUD">
                                     <a>
-                                        <p className={styles.navLink + ' px-3 pl-md-1 mr-5 mr-md-0 ' + (title === 'Test' ? styles.currentPage : '')}
+                                        <p className={styles.navLink + ' ' + (title === 'Test' ? styles.currentPage : '')}
                                            onClick={closeSidebar}>
-                                            <FontAwesomeIcon className='my-md-2 mx-md-4' icon={faPlusSquare}/>
+                                            <FontAwesomeIcon className='my-md-2 ml-md-2 mr-md-4' icon={faPlusSquare}/>
                                             <span>Test yaratish</span>
                                         </p>
                                     </a>
                                 </Link>
-
-                            </>}
+                            </div>}
                         </div>
                     </div>
-                    <main onClick={closeSidebar} className='min-vh-100 m-0 ml-md-5 p-0 p-md-3 pt-5'
+                    <main onClick={closeSidebar} className={' min-vh-100 m-0 ml-md-5 p-md-3'}
                           style={{boxSizing: 'border-box'}}>
                         <p style={{left: 0, right: 0, top: 0}}
-                           className='bg-success text-white text-center position-absolute'>
+                           className='bg-success text-white text-center position-absolute d-none d-md-block'>
                             Sayt test rejimida ishlamoqda
                         </p>
                         {children}

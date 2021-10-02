@@ -144,16 +144,15 @@ export default function Students() {
         <Layout loading={loading} title={'Studentlar'}>
             <Container>
                 <Row>
-                    <Col className='text-center pt-2'>
-                        <Button
-                            disabled={loading}
-                            className='mb-1 text-white'
-                            color={isPresent ? 'warning' : 'info'}
-                            onClick={changePage}>{isPresent ? 'Deleted' : 'Present'}
-                        </Button>
-                        <br/>
+                    <Col className='text-right pt-3 px-0'>
                         <Button disabled={!isPresent} color={'success'} onClick={() => openGroupModal({})}>
                             Guruh qo`shish
+                        </Button>
+                        <Button
+                            disabled={loading}
+                            className='ml-1 ml-md-2 text-white'
+                            color={isPresent ? 'warning' : 'info'}
+                            onClick={changePage}>{isPresent ? 'Deleted' : 'Present'}
                         </Button>
                     </Col>
                 </Row>

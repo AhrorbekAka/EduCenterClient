@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'Ubuntu';
+    font-family: 'Ubuntu-Medium';
     src: url('../public/Ubuntu/Ubuntu-Medium.ttf') format('truetype');
 }
 
@@ -15,81 +15,99 @@
 }
 
 .w70 {
-    width: 70%!important;
+    width: 70% !important;
 }
 
 .defaultWidth {
-    width: 60px!important;
+    width: 60px !important;
 }
 
 .sidebar {
-    font-family: "Ubuntu","Times New Roman", sans-serif!important;
-    padding: 5px 0;
-    height: 60px;
+    font-family: "Ubuntu-Medium", "Times New Roman", sans-serif !important;
+    /*padding: 5px 0;*/
+    height: 46px;
     z-index: 5;
     top: 0;
-    right: 0;
     width: 100%;
-    position: fixed;
-    transition-duration: 0.4s;
-    transition-timing-function: ease-in-out;
     background-color: #a8dadc;
-    overflow: hidden;
-    box-shadow: 0 0 8px 0 #1d3557;
 }
 
-.logo{
-    font-size: 20px;
-    font-weight: 600;
+.logo {
+    font-size: 16px;
     color: #1d3557;
+}
+
+.navBlock {
+    height: 50px;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    background-color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    z-index: 6;
 }
 
 .navLink {
     font-family: "Ubuntu-Regular", "Times New Roman", sans-serif;
     text-align: center;
-    font-size: 15px;
-    color: #5a5e62;
+    font-size: 18px;
+    color: #797c81;
 }
 
-.navLink>span {
-    font-size: 13px;
+.navLink > span {
+    font-size: 11px;
     display: block;
 }
 
 .currentPage {
-    font-size: 18px!important;
+    font-size: 20px !important;
     color: #1d3557 !important;
 }
 
-.children {
-    margin-left: 30px;
-    padding: 10px;
-    background: #00ffff;
-    height: 100vh;
-}
+/*.children {*/
+/*    margin-left: 30px;*/
+/*    padding: 10px;*/
+/*    background: #00ffff;*/
+/*    height: 100vh;*/
+/*}*/
 
 .settingsLogout {
-    position: fixed;
+    position: absolute;
     padding-top: 5px;
-    top:0;
+    top: 0;
     right: 0;
 }
 
 @media (min-width: 900px) {
     .w70 {
-        width: 18%!important;
+        width: 18% !important;
     }
+
     .sidebar {
+        font-family: "Ubuntu-Medium", "Times New Roman", sans-serif !important;
         min-height: 100vh;
         width: 68px;
-        display:block;
+        display: block;
         left: 0;
+        position: fixed;
+        justify-content: center;
+        transition-duration: 0.4s;
+        transition-timing-function: ease-in-out;
+        overflow: hidden;
+        box-shadow: 0 0 8px 0 #1d3557;
     }
 
     .logo {
         height: 70px;
         font-size: 30px;
         margin: 0 50px 30px 68px;
+        font-weight: 600;
+    }
+
+    .navBlock {
+        position: initial;
+        background-color: inherit;
     }
 
     .navLink {
@@ -99,20 +117,19 @@
         margin-bottom: 20px;
         display: flex;
         overflow: hidden;
-
     }
 
-    .navLink>span {
+    .navLink > span {
         font-size: 20px;
     }
 
     .currentPage {
-        font-size: 24px!important;
+        font-size: 24px !important;
     }
 
     .settingsLogout {
-        position: fixed;
-        left:0;
+        position: absolute;
+        left: 0;
         top: 85vh;
     }
 }
