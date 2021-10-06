@@ -4,7 +4,7 @@ import Modal from "reactstrap/lib/Modal";
 import {Button, FormGroup} from "reactstrap";
 import Image from "next/image";
 
-export default function AbstractModal({isOpen, setOpen, submit, loading, children}) {
+export default function AbstractModal({isOpen, setOpen, submit, loading, header, children}) {
     const toggle = () => setOpen(false)
 
     const onSave = () => {
@@ -14,7 +14,7 @@ export default function AbstractModal({isOpen, setOpen, submit, loading, childre
     return (
         <Modal isOpen={isOpen} toggle={toggle} unmountOnClose={true}>
             <ModalHeader toggle={toggle} className="bg-info text-white">
-                Yangi abituriyent qo`shish
+                {header}
             </ModalHeader>
             <ModalBody>
                 {children}

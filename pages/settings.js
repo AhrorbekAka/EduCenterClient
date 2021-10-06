@@ -18,8 +18,8 @@ export default function Settings() {
         const confirmNewPassword = document.getElementsByName("confirmNewPassword")[0].value
 
         // currentPassword.length<6 ||
-        if ( newPassword.length<6 || confirmNewPassword.length<6){
-            setResponse({isError: true, message: "Ey yaxshi inson katak bo`sh qolibdiku. Parolni o`zgartirish unchun hamma kattaklarni to`ldirishingiz zarur."})
+        if (currentPassword.length<1 || newPassword.length<6 || confirmNewPassword.length<6){
+            setResponse({isError: true, message: "Yangi parol kamida 6 ta belgidan iborat bo`lishi va hech bir katak bo`sh qolmasligi kerak."})
         }
         else if (newPassword !== confirmNewPassword) {
             setResponse({isError: true, message: "Yangi parol tasdiqlanmadi"})
@@ -47,7 +47,7 @@ export default function Settings() {
 
     return (
         <Layout title={"Sozlamalar"}>
-            <div className="row mt-5 pt-5">
+            <div className="row">
                 <div className='col-10 offset-1 col-md-4 offset-md-4 pt-5 text-center'>
                     <h3 className='text-info mb-4'>Parolni o`zgartirish</h3>
                     <p className={response.isError ? 'text-danger' : 'text-success'}>{response.message}</p>

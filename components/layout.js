@@ -3,6 +3,7 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Router from 'next/router'
 
 import {
     faBars,
@@ -16,6 +17,8 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {FormGroup, Input} from "reactstrap";
 import {queryParam} from "../services/requestService";
+import {confirmAlertLogout} from "../services/confirmAlert";
+
 
 export default function Layout({children, home, loading, title}) {
     const [isOpen, setIsOpen] = useState(false)
@@ -27,25 +30,20 @@ export default function Layout({children, home, loading, title}) {
     }, [])
 
     const toggleSidebar = () => {
-        if (isOpen) {
-            closeSidebar()
-        } else {
-            openSidebar()
-        }
         setIsOpen(!isOpen)
     }
 
-    const openSidebar = () => {
-        document.getElementById("sidebar").classList.add(styles.w70)
-        setIsOpen(true)
-    }
     const closeSidebar = () => {
-        document.getElementById("sidebar").classList.remove(styles.w70)
         setIsOpen(false)
         loading = true
     }
 
-    const logout = async () => {
+    const logout = () => {
+        confirmAlertLogout(removeTokenAndPushToHome)
+    }
+
+    const removeTokenAndPushToHome = () => {
+        Router.push('/')
         localStorage.removeItem("EducationCenterToken")
         localStorage.removeItem("menu")
     }
@@ -81,7 +79,7 @@ export default function Layout({children, home, loading, title}) {
 
             {!home && (
                 <div>
-                    <div id="sidebar" className={styles.sidebar}>
+                    <div id="sidebar" className={styles.sidebar + ' ' + (isOpen ? styles.w70 : '')}>
                         <div className='btn d-none d-md-inline-block bg-transparent text-white pr-md-0'
                              onClick={toggleSidebar}>
                             <FontAwesomeIcon className='m-2' style={{fontSize: '30px'}} icon={faBars}/>
@@ -99,7 +97,7 @@ export default function Layout({children, home, loading, title}) {
                                    name="lastName"
                                    placeholder="Familiya, ism, ..."/>
                         </FormGroup>
-                        <div className=''>
+                        <div>
                             <h2 className={styles.logo + ' pl-2 pb-2 pt-1 pt-md-0 d-none d-md-block'}>O`quv markazi</h2>
                             <div className={styles.settingsLogout + ' d-flex d-md-block'}>
                                 <Link href="/settings">
@@ -111,14 +109,12 @@ export default function Layout({children, home, loading, title}) {
                                         </p>
                                     </a>
                                 </Link>
-                                <Link href="/">
-                                    <a onClick={logout}>
-                                        <p className={styles.navLink}>
-                                            <FontAwesomeIcon className='mx-2 mx-md-4' icon={faSignOutAlt}/>
-                                            <span style={{display: !isOpen ? 'none' : ''}}>Chiqish</span>
-                                        </p>
-                                    </a>
-                                </Link>
+                                <button className='btn btn-link shadow-none p-0' onClick={logout}>
+                                    <p className={styles.navLink}>
+                                        <FontAwesomeIcon className='mx-2 mx-md-4' icon={faSignOutAlt}/>
+                                        <span style={{display: !isOpen ? 'none' : ''}}>Chiqish</span>
+                                    </p>
+                                </button>
                             </div>
                         </div>
 
@@ -168,7 +164,7 @@ export default function Layout({children, home, loading, title}) {
                         </div>
                     </div>
                     <main onClick={closeSidebar} className={' min-vh-100 m-0 ml-md-5 p-md-3'}
-                          style={{boxSizing: 'border-box'}}>
+                          style={{boxSizing: 'border-box', paddingBottom: '55px'}}>
                         <p style={{left: 0, right: 0, top: 0}}
                            className='bg-success text-white text-center position-absolute d-none d-md-block'>
                             Sayt test rejimida ishlamoqda

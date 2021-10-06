@@ -20,7 +20,8 @@ export default function Students() {
     const [group, setGroup] = useState({subject: {}, teachers: []})
     const [isPresent, setPresent] = useState(true)
     const [paymentModal, setPaymentModal] = useState(false)
-    const [openedCollapse, setOpenedCollapse] = React.useState("")
+    const [openedCollapse, setOpenedCollapse] = useState("")
+    const [isEditStudentModal, setEditStudentModal] = useState(false)
 
     useEffect(() => {
         let isMounted = true;
@@ -98,6 +99,7 @@ export default function Students() {
     }
 
     const onEditStudent = (selectedStudent) => {
+        setEditStudentModal(true)
         setSelectedGroupId(null)
         setStudent(selectedStudent)
         openStudentModal()
@@ -132,10 +134,10 @@ export default function Students() {
 
     const openPaymentModal = (selectedStudent, group) => {
         setStudent({groupId: group.id, ...selectedStudent})
-        console.log(group)
         setGroup(group)
         togglePaymentModal()
     }
+
     const togglePaymentModal = () => {
         setPaymentModal(!paymentModal)
     }
@@ -240,7 +242,14 @@ export default function Students() {
                                                         group.students.map((student, i) => (
                                                             <tr key={i}>
                                                                 <td>{i + 1}</td>
-                                                                <td>{student.lastName + " " + student.firstName}</td>
+                                                                <td>
+                                                                    <button
+                                                                        className='btn text-white shadow-none bg-transparent'
+                                                                        onClick={()=>onEditStudent(student)}
+                                                                        // onDoubleClick={()=>onDeleteStudent(student.id)}
+                                                                    >
+                                                                        {student.lastName + " " + student.firstName}
+                                                                    </button></td>
                                                                 <td>
                                                                     <button
                                                                         onClick={() => openPaymentModal(student, group)}
@@ -250,16 +259,13 @@ export default function Students() {
                                                                         {student.balance!=null?student.balance.toLocaleString():0}
                                                                     </button>
                                                                 </td>
-                                                                {/*<td>{student.phoneNumber}</td>*/}
-                                                                {/*<td className='d-none d-md-table-cell'>{student.parentsNumber}</td>*/}
-                                                                {/*<td className='d-none d-md-table-cell'>{student.address}</td>*/}
                                                                 <td>
                                                                     <DeleteButton
                                                                         submit={() => onDeleteStudent(student.id)}
                                                                         // isStudyingNow
                                                                         size='25px' style={{display: true ? 'none' : 'inline-block', marginRight: '10px'}} disableBtn={false}/>
-                                                                    <EditButton submit={() => onEditStudent(student)}
-                                                                                size='25px'/>
+                                                                    {/*<EditButton submit={() => onEditStudent(student)}*/}
+                                                                    {/*            size='25px'/>*/}
                                                                     <DeleteButton
                                                                         submit={() => onDeleteStudentFromGroup(student, group.id)}
                                                                         size='25px' style={{marginLeft: '10px'}}/>
@@ -293,6 +299,8 @@ export default function Students() {
                 setOpen={setStudentModal}
                 payload={{selectedGroupId, student}}
                 refresh={requestGroups}
+                openPaymentModal={openPaymentModal}
+                isEdit={isEditStudentModal}
             />}
 
             {paymentModal === true && <PaymentModal

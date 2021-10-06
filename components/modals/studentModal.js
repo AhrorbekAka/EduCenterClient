@@ -7,7 +7,7 @@ import {queryData, queryParam} from "../../services/requestService";
 import AbstractModal from "./abstractModal";
 
 
-export default function StudentModal({isOpen, setOpen, payload, refresh}) {
+export default function StudentModal({isOpen, setOpen, payload, refresh, openPaymentModal, isEdit}) {
 
     const [loading, setLoading] = useState(false)
     const [student, setStudent] = useState(!payload.student?{}:payload.student)
@@ -57,7 +57,13 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
     }
 
     return (
-        <AbstractModal isOpen={isOpen} setOpen={setOpen} submit={onSaveStudent} loading={loading}>
+        <AbstractModal
+            isOpen={isOpen}
+            setOpen={setOpen}
+            submit={onSaveStudent}
+            loading={loading}
+            header={isEdit?'Tahrirlash':'Yangi abituriyent qo`shish'}
+        >
             <FormGroup>
                 <datalist id="lastNameOption">
                     {
@@ -66,7 +72,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
                     }
                 </datalist>
 
-                <Input list="lastNameOption" onChange={(event) => studentChangeHandler(event)} type="text"
+                <Input disabled={isEdit} list="lastNameOption" onChange={(event) => studentChangeHandler(event)} type="text"
                        defaultValue={student.lastName} name="lastName"
                        placeholder="Familiya"/>
             </FormGroup>
@@ -77,7 +83,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
                             <option key={index} value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
                     }
                 </datalist>
-                <Input list="firstNameOption" onChange={(event) => studentChangeHandler(event)} type="text"
+                <Input disabled={isEdit} list="firstNameOption" onChange={(event) => studentChangeHandler(event)} type="text"
                        defaultValue={student.firstName} name="firstName"
                        placeholder="Ism"/>
             </FormGroup>
@@ -88,7 +94,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
                             <option key={index} value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
                     }
                 </datalist>
-                <Input list="phoneNumberOption" onChange={(event) => studentChangeHandler(event)} type="text"
+                <Input disabled={isEdit} list="phoneNumberOption" onChange={(event) => studentChangeHandler(event)} type="text"
                        defaultValue={student.phoneNumber} name="phoneNumber"
                        placeholder="Telefon raqami"/>
             </FormGroup>
@@ -99,14 +105,23 @@ export default function StudentModal({isOpen, setOpen, payload, refresh}) {
                             <option key={index} value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
                     }
                 </datalist>
-                <Input list="parentsNumberOption" onChange={(event) => studentChangeHandler(event)} type="text"
+                <Input disabled={isEdit} list="parentsNumberOption" onChange={(event) => studentChangeHandler(event)} type="text"
                        defaultValue={student.parentsNumber} name="parentsNumber"
                        placeholder="Ota-onasining telefon raqami"/>
             </FormGroup>
             <FormGroup>
-                <Input type="text" defaultValue={student.address} name="address"
+                <Input disabled={isEdit} type="text" defaultValue={student.address} name="address"
                        placeholder="Manzili"/>
             </FormGroup>
+            {/*<FormGroup>*/}
+            {/*    <Button*/}
+            {/*        onClick={() => openPaymentModal(student, group)}*/}
+            {/*        className={(student.balance >= 0 ? 'btn btn-success' : 'btn btn-danger')}>*/}
+            {/*        {console.log(student)}*/}
+            {/*        {student.balance}*/}
+                    {/*{student.balance!=null?student.balance.toLocaleString():0}*/}
+                {/*</Button>*/}
+            {/*</FormGroup>*/}
         </AbstractModal>
     )
 }

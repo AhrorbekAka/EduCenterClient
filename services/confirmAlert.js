@@ -18,3 +18,18 @@ export function confirmAlertService(title, name, onYes, params, isPresent, disab
         ]
     });
 }
+
+export function confirmAlertLogout(onYes) {
+    confirmAlert({
+        title: 'Profilingizdan chiqishni istaysizmi?',
+        buttons: [
+            {
+                label: 'Ha',
+                onClick: () => onYes()
+            },
+            {
+                label: 'Yo`q',
+            }
+        ]
+    });
+}
