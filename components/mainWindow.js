@@ -64,10 +64,12 @@ export default function MainWindow({menu, title, children, loading}) {
             onTouchEnd={() => handleTouchEnd()}
             className={' min-vh-100 m-0 ml-md-5 p-md-3'}
             style={{boxSizing: 'border-box', paddingBottom: '55px'}}>
+
             <p style={{left: 0, right: 0, top: 0}}
                className='bg-success text-white text-center position-absolute d-none d-md-block'>
                 Sayt test rejimida ishlamoqda
             </p>
+
             {loading && <div className='position-relative vh-100 vw-100 text-center'>
                 <div
                     className='position-absolute'
@@ -80,6 +82,7 @@ export default function MainWindow({menu, title, children, loading}) {
                     <p className='pl-3 pt-3'> Loading . . .</p>
                 </div>
             </div>}
+
             {!loading && children}
         </main>
     )
