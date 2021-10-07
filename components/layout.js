@@ -54,26 +54,60 @@ export default function Layout({children, home, loading, title}) {
         }
     }
 
-    const openStudentModal = (stud) =>{
+    const openStudentModal = (stud) => {
         setStudent(stud)
         setStudentModal(true)
     }
 
-    const handleTouchStart = (touchStartEvent)=> {
-        touchStartEvent.preventDefault();
-        alert('afsd')
-        console.log(touchStartEvent);
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
+
+    const handleTouchStart = (touchStartEvent) => {
+        setTouchStart(touchStartEvent.targetTouches[0].clientX)
     }
 
-    const handleTouchMove = (e)=> {
-        console.log(e);
+    const handleTouchMove = (touchMoveEvent) => {
+        setTouchEnd(touchMoveEvent.targetTouches[0].clientX)
     }
 
-    const handleTouchEnd = ()=> {
+    const handleTouchEnd = () => {
+        if (touchStart - touchEnd > 150) {
+            swipeRight();
+        }
 
+        if (touchStart - touchEnd < -150) {
+            swipeLeft();
+        }
     }
 
+    const swipeRight = () => {
+        switch (title) {
+            case 'Studentlar':
+                Router.push(menu > 2 ? '/employee' : '/groups')
+                break
+            case 'Ishchilar':
+                Router.push('/groups')
+                break
+            case 'Guruhlar':
+                Router.push('/testCRUD')
+                break
+            default: break
+        }
+    }
 
+    const swipeLeft = () => {
+        switch (title) {
+            case 'Ishchilar':
+                Router.push('/students')
+                break
+            case 'Guruhlar':
+                Router.push(menu>2?'/employee':menu>1?'/students':'')
+                break
+            default:
+                Router.push(menu>0?'/groups':'')
+                break
+        }
+    }
 
     // if (loading) return (<div className='position-relative vh-100 vw-100 text-center'>
     //     <div
@@ -88,7 +122,7 @@ export default function Layout({children, home, loading, title}) {
     //     </div>
     // </div>)
     // else
-        return (
+    return (
         <div className={styles.container}>
             <Head>
                 <title>{title}</title>
@@ -104,10 +138,10 @@ export default function Layout({children, home, loading, title}) {
                             <FontAwesomeIcon className='m-2' style={{fontSize: '30px'}} icon={faBars}/>
                         </div>
                         <FormGroup className='w-75 d-inline-block ml-1 my-1 my-md-0 ml-md-2'>
-                            <datalist id="findStudentOption" >
+                            <datalist id="findStudentOption">
                                 {
                                     pageStudent.content.map((stud, index) =>
-                                        <option onSelect={()=>openStudentModal(stud)} key={index}
+                                        <option onSelect={() => openStudentModal(stud)} key={index}
                                                 value={stud.lastName + ' ' + stud.firstName}/>)
                                 }
                             </datalist>
@@ -115,15 +149,15 @@ export default function Layout({children, home, loading, title}) {
                             <Input list="findStudentOption" onChange={(event) => findStudent(event)} type="text"
                                    name="lastName"
                                    placeholder="Familiya, ism, ..."/>
-                                   <StudentModal
-                                       isOpen={studentModal}
-                                       setOpen={setStudentModal}
-                                       payload={{ student}}
-                                       // refresh={requestGroups}
-                                       // openPaymentModal={openPaymentModal}
-                                       // isEdit={isEditStudentModal}
-                                       // setEdit={setEditStudentModal}
-                                   />
+                            <StudentModal
+                                isOpen={studentModal}
+                                setOpen={setStudentModal}
+                                payload={{student}}
+                                // refresh={requestGroups}
+                                // openPaymentModal={openPaymentModal}
+                                // isEdit={isEditStudentModal}
+                                // setEdit={setEditStudentModal}
+                            />
                         </FormGroup>
                         <div>
                             <h2 className={styles.logo + ' pl-2 pb-2 pt-1 pt-md-0 d-none d-md-block'}>O`quv markazi</h2>
@@ -196,12 +230,12 @@ export default function Layout({children, home, loading, title}) {
                         onTouchMove={touchMoveEvent => handleTouchMove(touchMoveEvent)}
                         onTouchEnd={() => handleTouchEnd()}
                         onClick={closeSidebar} className={' min-vh-100 m-0 ml-md-5 p-md-3'}
-                          style={{boxSizing: 'border-box', paddingBottom: '55px'}}>
+                        style={{boxSizing: 'border-box', paddingBottom: '55px'}}>
                         <p style={{left: 0, right: 0, top: 0}}
                            className='bg-success text-white text-center position-absolute d-none d-md-block'>
                             Sayt test rejimida ishlamoqda
                         </p>
-                        {loading&&<div className='position-relative vh-100 vw-100 text-center'>
+                        {loading && <div className='position-relative vh-100 vw-100 text-center'>
                             <div
                                 className='position-absolute'
                                 style={{zIndex: '99', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
@@ -213,7 +247,7 @@ export default function Layout({children, home, loading, title}) {
                                 <p className='pl-3 pt-3'> Loading . . .</p>
                             </div>
                         </div>}
-                        {!loading&&children}
+                        {!loading && children}
                     </main>
                 </div>
             )}
