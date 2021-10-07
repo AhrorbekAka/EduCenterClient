@@ -7,7 +7,7 @@ import {queryData, queryParam} from "../../services/requestService";
 import AbstractModal from "./abstractModal";
 
 
-export default function StudentModal({isOpen, setOpen, payload, refresh, openPaymentModal, isEdit}) {
+export default function StudentModal({isOpen, setOpen, payload, refresh, openPaymentModal, isEdit, setEdit}) {
 
     const [loading, setLoading] = useState(false)
     const [student, setStudent] = useState(!payload.student?{}:payload.student)
@@ -39,6 +39,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh, openPay
             setOpen(false)
             refresh()
         })
+        set
     }
 
     const studentChangeHandler = async (e) => {
@@ -112,6 +113,11 @@ export default function StudentModal({isOpen, setOpen, payload, refresh, openPay
             <FormGroup>
                 <Input disabled={isEdit} type="text" defaultValue={student.address} name="address"
                        placeholder="Manzili"/>
+            </FormGroup>
+            <FormGroup className='text-right'>
+                <Button onClick={()=>setEdit(!isEdit)} color='warning' className={!isEdit?'d-none':''+' text-white'}>
+                    Edit
+                </Button>
             </FormGroup>
             {/*<FormGroup>*/}
             {/*    <Button*/}

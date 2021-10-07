@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Router from "next/router";
 
 //errorda asosiy sahifaga qaytadigan qilib qo`yishim kerak
 export const DOMAIN = "https://edu-centre.herokuapp.com";
@@ -45,4 +46,11 @@ export function queryParam(param) {
     } catch (e) {
         return {object: {}}
     }
+}
+
+export function logout() {
+    Router.push('/').then(r => {
+        localStorage.removeItem("EducationCenterToken")
+        localStorage.removeItem("menu")
+    })
 }

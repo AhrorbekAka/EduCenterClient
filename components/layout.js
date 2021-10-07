@@ -1,6 +1,6 @@
 import styles from './layout.module.css'
 import Head from "next/head";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Router from 'next/router'
@@ -16,14 +16,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {FormGroup, Input} from "reactstrap";
-import {queryParam} from "../services/requestService";
+import {logout, queryParam} from "../services/requestService";
 import {confirmAlertLogout} from "../services/confirmAlert";
+import StudentModal from "./modals/studentModal";
 
 
 export default function Layout({children, home, loading, title}) {
     const [isOpen, setIsOpen] = useState(false)
     const [menu, setMenu] = useState([])
     const [pageStudent, setPageStudent] = useState({content: [{lastName: '', firstName: ''}]})
+    const [studentModal, setStudentModal] = useState(false)
+    const [student, setStudent] = useState(false)
 
     useEffect(async () => {
         await setMenu(localStorage.getItem('menu'))
@@ -38,14 +41,8 @@ export default function Layout({children, home, loading, title}) {
         loading = true
     }
 
-    const logout = () => {
-        confirmAlertLogout(removeTokenAndPushToHome)
-    }
-
-    const removeTokenAndPushToHome = () => {
-        Router.push('/')
-        localStorage.removeItem("EducationCenterToken")
-        localStorage.removeItem("menu")
+    const callLogoutAlert = () => {
+        confirmAlertLogout(logout)
     }
 
     const findStudent = async (e) => {
@@ -57,19 +54,41 @@ export default function Layout({children, home, loading, title}) {
         }
     }
 
-    if (loading) return (<div className='position-relative vh-100 vw-100 text-center'>
-        <div
-            className='position-absolute'
-            style={{zIndex: '99', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
-            <Image src="/loading(2).gif"
-                   alt="loading..."
-                   width={40}
-                   height={40}/>
-            <br/>
-            <p className='pl-3 pt-3'> Loading . . .</p>
-        </div>
-    </div>)
-    else return (
+    const openStudentModal = (stud) =>{
+        setStudent(stud)
+        setStudentModal(true)
+    }
+
+    const handleTouchStart = (touchStartEvent)=> {
+        touchStartEvent.preventDefault();
+        alert('afsd')
+        console.log(touchStartEvent);
+    }
+
+    const handleTouchMove = (e)=> {
+        console.log(e);
+    }
+
+    const handleTouchEnd = ()=> {
+
+    }
+
+
+
+    // if (loading) return (<div className='position-relative vh-100 vw-100 text-center'>
+    //     <div
+    //         className='position-absolute'
+    //         style={{zIndex: '99', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+    //         <Image src="/loading(2).gif"
+    //                alt="loading..."
+    //                width={40}
+    //                height={40}/>
+    //         <br/>
+    //         <p className='pl-3 pt-3'> Loading . . .</p>
+    //     </div>
+    // </div>)
+    // else
+        return (
         <div className={styles.container}>
             <Head>
                 <title>{title}</title>
@@ -85,17 +104,26 @@ export default function Layout({children, home, loading, title}) {
                             <FontAwesomeIcon className='m-2' style={{fontSize: '30px'}} icon={faBars}/>
                         </div>
                         <FormGroup className='w-75 d-inline-block ml-1 my-1 my-md-0 ml-md-2'>
-                            <datalist id="findStudentOption">
+                            <datalist id="findStudentOption" >
                                 {
                                     pageStudent.content.map((stud, index) =>
-                                        <option key={index}
-                                                value={stud.id}>{stud.lastName + ' ' + stud.firstName}</option>)
+                                        <option onSelect={()=>openStudentModal(stud)} key={index}
+                                                value={stud.lastName + ' ' + stud.firstName}/>)
                                 }
                             </datalist>
 
                             <Input list="findStudentOption" onChange={(event) => findStudent(event)} type="text"
                                    name="lastName"
                                    placeholder="Familiya, ism, ..."/>
+                                   <StudentModal
+                                       isOpen={studentModal}
+                                       setOpen={setStudentModal}
+                                       payload={{ student}}
+                                       // refresh={requestGroups}
+                                       // openPaymentModal={openPaymentModal}
+                                       // isEdit={isEditStudentModal}
+                                       // setEdit={setEditStudentModal}
+                                   />
                         </FormGroup>
                         <div>
                             <h2 className={styles.logo + ' pl-2 pb-2 pt-1 pt-md-0 d-none d-md-block'}>O`quv markazi</h2>
@@ -109,7 +137,7 @@ export default function Layout({children, home, loading, title}) {
                                         </p>
                                     </a>
                                 </Link>
-                                <button className='btn btn-link shadow-none p-0' onClick={logout}>
+                                <button className='btn btn-link shadow-none p-0' onClick={callLogoutAlert}>
                                     <p className={styles.navLink}>
                                         <FontAwesomeIcon className='mx-2 mx-md-4' icon={faSignOutAlt}/>
                                         <span style={{display: !isOpen ? 'none' : ''}}>Chiqish</span>
@@ -163,13 +191,29 @@ export default function Layout({children, home, loading, title}) {
                             </div>}
                         </div>
                     </div>
-                    <main onClick={closeSidebar} className={' min-vh-100 m-0 ml-md-5 p-md-3'}
+                    <main
+                        onTouchStart={touchStartEvent => handleTouchStart(touchStartEvent)}
+                        onTouchMove={touchMoveEvent => handleTouchMove(touchMoveEvent)}
+                        onTouchEnd={() => handleTouchEnd()}
+                        onClick={closeSidebar} className={' min-vh-100 m-0 ml-md-5 p-md-3'}
                           style={{boxSizing: 'border-box', paddingBottom: '55px'}}>
                         <p style={{left: 0, right: 0, top: 0}}
                            className='bg-success text-white text-center position-absolute d-none d-md-block'>
                             Sayt test rejimida ishlamoqda
                         </p>
-                        {children}
+                        {loading&&<div className='position-relative vh-100 vw-100 text-center'>
+                            <div
+                                className='position-absolute'
+                                style={{zIndex: '99', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+                                <Image src="/loading(2).gif"
+                                       alt="loading..."
+                                       width={40}
+                                       height={40}/>
+                                <br/>
+                                <p className='pl-3 pt-3'> Loading . . .</p>
+                            </div>
+                        </div>}
+                        {!loading&&children}
                     </main>
                 </div>
             )}

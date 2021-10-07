@@ -1,6 +1,6 @@
 import Layout from "../components/layout";
 import React, {useEffect, useState} from 'react'
-import {queryParam} from "../services/requestService";
+import {logout, queryParam} from "../services/requestService";
 import {Button, Card, CardBody, CardHeader, Col, Collapse, Container, Row} from "reactstrap";
 import StudentModal from "../components/modals/studentModal";
 
@@ -21,7 +21,6 @@ export default function Students() {
     const [isPresent, setPresent] = useState(true)
     const [paymentModal, setPaymentModal] = useState(false)
     const [openedCollapse, setOpenedCollapse] = useState("")
-    const [isEditStudentModal, setEditStudentModal] = useState(false)
 
     useEffect(() => {
         let isMounted = true;
@@ -38,6 +37,7 @@ export default function Students() {
                 setGroups(res.data.object)
             } else {
                 alert(res.data.message)
+                logout()
             }
             setLoading(false)
         })
@@ -87,6 +87,7 @@ export default function Students() {
     const [studentModal, setStudentModal] = useState(false)
     const [selectedGroupId, setSelectedGroupId] = useState('')
     const [student, setStudent] = useState({})
+    const [isEditStudentModal, setEditStudentModal] = useState(false)
 
     const openStudentModal = () => {
         setStudentModal(true)
@@ -95,6 +96,7 @@ export default function Students() {
     const createStudent = (groupId) => {
         setStudent({})
         setSelectedGroupId(groupId)
+        setEditStudentModal(false)
         openStudentModal()
     }
 
@@ -228,12 +230,9 @@ export default function Students() {
                                                     <th>№</th>
                                                     <th>FIO</th>
                                                     <th>Balance</th>
-                                                    {/*<th>Telefon №</th>*/}
-                                                    {/*<th className='d-none d-md-table-cell'>Ota(Ona)sining raqami</th>*/}
-                                                    {/*<th className='d-none d-md-table-cell'>Address</th>*/}
-                                                    <th className='pb-2'>
-                                                        <AddButton style={{width: '60px'}}
-                                                                   submit={() => createStudent(group.id)}/>
+                                                    <th><AddButton
+                                                            style={{width: '35px'}}
+                                                            submit={() => createStudent(group.id)}/>
                                                     </th>
                                                 </tr>
                                                 </thead>
@@ -246,7 +245,6 @@ export default function Students() {
                                                                     <button
                                                                         className='btn text-white shadow-none bg-transparent'
                                                                         onClick={()=>onEditStudent(student)}
-                                                                        // onDoubleClick={()=>onDeleteStudent(student.id)}
                                                                     >
                                                                         {student.lastName + " " + student.firstName}
                                                                     </button></td>
@@ -301,6 +299,7 @@ export default function Students() {
                 refresh={requestGroups}
                 openPaymentModal={openPaymentModal}
                 isEdit={isEditStudentModal}
+                setEdit={setEditStudentModal}
             />}
 
             {paymentModal === true && <PaymentModal
