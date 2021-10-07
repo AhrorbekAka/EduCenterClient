@@ -74,6 +74,7 @@ export default function Sidebar({menu, title}){
                     // openPaymentModal={openPaymentModal}
                     // isEdit={isEditStudentModal}
                     // setEdit={setEditStudentModal}
+                    // setEdit={setEditStudentModal}
                 />
             </FormGroup>
             <div>
