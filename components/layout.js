@@ -7,8 +7,8 @@ import MainWindow from "./mainWindow";
 export default function Layout({children, home, loading, title}) {
     const [menu, setMenu] = useState([])
 
-    useEffect(async () => {
-        await setMenu(localStorage.getItem('menu'))
+    useEffect(() => {
+        setMenu(localStorage.getItem('menu'))
     }, [])
 
     if (home)
