@@ -28,7 +28,6 @@ export default function Sidebar({menu, title}){
 
     const closeSidebar = () => {
         setIsOpen(false)
-        loading(true)
     }
 
     const callLogoutAlert = () => {
