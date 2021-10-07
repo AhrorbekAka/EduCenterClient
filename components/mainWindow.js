@@ -17,7 +17,7 @@ export default function MainWindow({menu, title, children, loading}) {
     }
 
     const handleTouchEnd = () => {
-        if (touchStart - touchEnd > 150) {
+        if (touchEnd > 0 && touchStart - touchEnd > 150) {
             swipeRight();
         }
 
@@ -53,7 +53,8 @@ export default function MainWindow({menu, title, children, loading}) {
             case 'Test':
                 Router.push(menu > 0 ? '/groups' : '')
                 break
-            default: break
+            default:
+                break
         }
     }
 
