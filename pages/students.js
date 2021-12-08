@@ -11,6 +11,7 @@ import {confirmAlertService} from "../services/confirmAlert";
 import EditButton from "../components/buttons/editButton";
 import DeleteButton from "../components/buttons/deleteButton";
 import AddButton from "../components/buttons/addButton";
+import AbstractModal from "../components/modals/abstractModal";
 
 export default function Students() {
     const [loading, setLoading] = useState(true)
@@ -68,7 +69,7 @@ export default function Students() {
             path: '/api/groups/closeOrReopen',
             method: 'patch',
             groupId
-        }).then(res=>requestGroups(isPresent))
+        }).then(res => requestGroups(isPresent))
     };
 
     const onDeleteGroup = (group) => {
@@ -81,7 +82,7 @@ export default function Students() {
             path: '/api/groups',
             method: 'delete',
             groupId
-        }).then(res=>requestGroups(false))
+        }).then(res => requestGroups(false))
     };
 
     const [studentModal, setStudentModal] = useState(false)
@@ -126,12 +127,12 @@ export default function Students() {
         confirmAlertService('Student', student.lastName + ' ' + student.firstName, deleteStudent, studentId, true, false)
     };
 
-    const deleteStudent = (studentId)=> {
+    const deleteStudent = (studentId) => {
         queryParam({
             path: '/api/student',
             method: 'delete',
             studentId
-        }).then(res=>requestGroups(false))
+        }).then(res => requestGroups(false))
     }
 
     const openPaymentModal = (selectedStudent, group) => {
@@ -142,6 +143,19 @@ export default function Students() {
 
     const togglePaymentModal = () => {
         setPaymentModal(!paymentModal)
+    }
+
+    const [isTestResultsOpen, setTestResultsOpen] = useState(false)
+    const [testResults, setTestResults] = useState([{resTestResults:[]}])
+    const getTestResultsByGroupId = (groupId) => {
+        queryParam({
+            path: '/api/student-history/get-results/' + groupId,
+            method: 'get'
+        }).then(res => {
+            setTestResultsOpen(true)
+            setTestResults(res.data.object)
+            console.log(res)
+        })
     }
 
     return (
@@ -185,13 +199,14 @@ export default function Students() {
                                                 <span className={isPresent ? '' : 'text-danger'}>{group.name}</span>
                                             </Button>
 
-                                            <DeleteButton submit={() => onCloseGroup(group)} isDelete={!isPresent} style={{
-                                                zIndex: '1',
-                                                left: '5px',
-                                                top: '6px',
-                                                bottom: '6px',
-                                                position: 'absolute',
-                                            }}/>
+                                            <DeleteButton submit={() => onCloseGroup(group)} isDelete={!isPresent}
+                                                          style={{
+                                                              zIndex: '1',
+                                                              left: '5px',
+                                                              top: '6px',
+                                                              bottom: '6px',
+                                                              position: 'absolute',
+                                                          }}/>
 
                                             <DeleteButton disableBtn={false}
                                                           style={{
@@ -231,8 +246,10 @@ export default function Students() {
                                                     <th>FIO</th>
                                                     <th>Balance</th>
                                                     <th><AddButton
-                                                            style={{width: '35px'}}
-                                                            submit={() => createStudent(group.id)}/>
+                                                        style={{width: '35px'}}
+                                                        submit={() => createStudent(group.id)}/>
+                                                        <Button onClick={() => getTestResultsByGroupId(group.id)}>Test
+                                                            Results</Button>
                                                     </th>
                                                 </tr>
                                                 </thead>
@@ -244,24 +261,28 @@ export default function Students() {
                                                                 <td>
                                                                     <button
                                                                         className='btn text-white shadow-none bg-transparent'
-                                                                        onClick={()=>onEditStudent(student)}
+                                                                        onClick={() => onEditStudent(student)}
                                                                     >
                                                                         {student.lastName + " " + student.firstName}
-                                                                    </button></td>
+                                                                    </button>
+                                                                </td>
                                                                 <td>
                                                                     <button
                                                                         onClick={() => openPaymentModal(student, group)}
                                                                         className={(student.balance >= 0 ? 'btn btn-success' : 'btn btn-danger')}>
                                                                         {/*{console.log(student)}*/}
                                                                         {/*{student.balance}*/}
-                                                                        {student.balance!=null?student.balance.toLocaleString():0}
+                                                                        {student.balance != null ? student.balance.toLocaleString() : 0}
                                                                     </button>
                                                                 </td>
                                                                 <td>
                                                                     <DeleteButton
                                                                         submit={() => onDeleteStudent(student.id)}
                                                                         // isStudyingNow
-                                                                        size='25px' style={{display: true ? 'none' : 'inline-block', marginRight: '10px'}} disableBtn={false}/>
+                                                                        size='25px' style={{
+                                                                        display: true ? 'none' : 'inline-block',
+                                                                        marginRight: '10px'
+                                                                    }} disableBtn={false}/>
                                                                     {/*<EditButton submit={() => onEditStudent(student)}*/}
                                                                     {/*            size='25px'/>*/}
                                                                     <DeleteButton
@@ -308,6 +329,40 @@ export default function Students() {
                 payload={{group, student}}
                 refresh={requestGroups}
             />}
+
+            {isTestResultsOpen === true && <AbstractModal
+                header={'Test natijalari'}
+                isOpen={isTestResultsOpen}
+                submit={()=>{setTestResultsOpen(!isTestResultsOpen)}}
+                setOpen={setTestResultsOpen}
+                children={<table className='table m-0 table-bordered'>
+                    <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>FIO</th>
+                        {
+                            testResults[0].resTestResults.map(res=>(
+                                <th key={res.testTitle}>{res.testTitle}</th>
+                            ))
+                        }
+                    </tr>
+                    </thead>
+                    <tbody>{
+                            testResults.map((testResult, i) => (
+                                <tr key={i}>
+                                    <td>{i + 1}</td>
+                                    <td>
+                                        {testResult.studentLastName + " " + testResult.studentFirstName}
+                                    </td>
+                                    {
+                                        testResults[i].resTestResults.map(res=>(
+                                            <td key={i}>{res.result}</td>
+                                        ))
+                                    }
+                                </tr>
+                            ))
+                    }</tbody>
+                </table>}/>}
         </Layout>
     )
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/../edu-center-server/src/main/java/ecma/demo/educenter/repository/StudentHistoryRepository.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/../edu-center-server/src/main/java/ecma/demo/educenter/repository/test/AnswerRepository.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/../edu-center-server/src/main/java/ecma/demo/educenter/repository/test/TestRepository.java" dialect="GenericSQL" />
+  </component>
+</project>

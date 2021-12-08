@@ -29,10 +29,10 @@ export default function Timer({time, stopTest}) {
     }
 
     return (
-        <div style={{position: 'sticky', top:'0'}}>
+        <div style={{position: 'fixed', top:'1rem', right: '1.7rem', zIndex:'100'}} className='border rounded bg-white p-2 pb-0'>
             {minutes === 0 && seconds === 0
                 ? <h5 className='text-danger'>Vaqt tugadi ! ! !</h5>
-                : <h5 style={{color: 'brown'}}>
+                : <h5 style={{color: 'red'}} className='m-0'>
                     <span className='text-muted d-none d-md-inline-block'>Qolgan vaqt:</span> {'  '}
                     <b>
                         {hours}:
