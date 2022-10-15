@@ -82,13 +82,13 @@ export default function TestIndex() {
             <Layout home loading={loading}>
                 <div className='container'>
                     <div className='pt-5 text-center'>
-                        <div className='mb-3 text-white'>
-                            <Link href='/'>
-                                <a onClick={onHome} className='btn btn-primary btn-sm'>
-                                    Home
-                                </a>
-                            </Link>
-                        </div>
+                        {/*<div className='mb-3 text-white'>*/}
+                        {/*    <Link href='/'>*/}
+                        {/*        <a onClick={onHome} className='btn btn-primary btn-sm'>*/}
+                        {/*            Home*/}
+                        {/*        </a>*/}
+                        {/*    </Link>*/}
+                        {/*</div>*/}
                         <Label className='mr-3 text-md-left text-white'>
                             <p>Telefon №</p>
                             <InputGroup>
@@ -108,8 +108,8 @@ export default function TestIndex() {
                             </InputGroup>
                         </Label>
                         <Label>
-                            <p className={groups.length > 0 ? 'text-light' : 'text-warning'}>{groups.length > 0 ? 'Guruhingizni tanlang' : 'Guruh tanlashdan avval fan tanlang'}</p>
-                            <Input type="select" name="group" defaultValue='-1' onChange={onSelectGroup}>
+                            {/*<p className={groups.length > 0 ? 'text-light' : 'text-warning'}>{groups.length > 0 ? 'Guruhingizni tanlang' : 'Telefon raqamingizni kititing'}</p>*/}
+                            <Input className={phoneNumDisabled?"":"d-none"} type="select" name="group" defaultValue='-1' onChange={onSelectGroup}>
                                 {<>
                                     <option value='-1' disabled>Guruhingizni tanlang</option>
                                     {groups.map((group, index) =>

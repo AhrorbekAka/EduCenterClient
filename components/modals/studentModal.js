@@ -1,13 +1,10 @@
-import ModalHeader from "reactstrap/lib/ModalHeader";
-import ModalBody from "reactstrap/lib/ModalBody";
 import {Button, FormGroup, Input} from "reactstrap";
-import Modal from "reactstrap/lib/Modal";
 import {useState} from "react";
 import {queryData, queryParam} from "../../services/requestService";
 import AbstractModal from "./abstractModal";
 
 
-export default function StudentModal({isOpen, setOpen, payload, refresh, openPaymentModal, isEdit, setEdit}) {
+export default function StudentModal({isOpen, setOpen, payload, refresh, isEdit, setEdit}) {
 
     const [loading, setLoading] = useState(false)
     const [student, setStudent] = useState(!payload.student?{}:payload.student)
@@ -40,7 +37,6 @@ export default function StudentModal({isOpen, setOpen, payload, refresh, openPay
             setOpen(false)
             refresh()
         })
-        set
     }
 
     const studentChangeHandler = async (e) => {
