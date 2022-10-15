@@ -12,7 +12,7 @@ export default function EmployeeModal({isOpen, setOpen, setUser, user, refresh})
         const newUser = {
             id: user.id,
             firstName: document.getElementsByName('firstName')[0].value,
-            lastName: document.getElementsByName('lastName')[0].value,
+            lastName: document.getElementsByName('lastName')[1].value,
             roleName: document.getElementsByName("roleName")[0].value,
             phoneNumber: document.getElementsByName('phoneNumber')[0].value,
             password: passwordLocked ? '' : document.getElementsByName('password')[0].value,
