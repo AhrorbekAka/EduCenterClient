@@ -29,6 +29,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh, openPay
             address: document.getElementsByName("address")[0].value,
             groupIdList: [payload.selectedGroupId!=null?payload.selectedGroupId:null]
         };
+        console.log(document.getElementsByName("lastName")[1].value)
         queryData({
             path: '/api/student',
             method: 'post',
