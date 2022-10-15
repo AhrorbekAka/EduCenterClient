@@ -64,7 +64,7 @@ export default function Sidebar({menu, title}){
                 </datalist>
 
                 <Input list="findStudentOption" onChange={(event) => findStudent(event)} type="text"
-                       name="lastName"
+                       name="searchedValue"
                        placeholder="Familiya, ism, ..."/>
                 <StudentModal
                     isOpen={studentModal}

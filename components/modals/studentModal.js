@@ -20,7 +20,7 @@ export default function StudentModal({isOpen, setOpen, payload, refresh, isEdit,
         const newStudent = {
             id: student.id,
             firstName: document.getElementsByName("firstName")[0].value,
-            lastName: document.getElementsByName("lastName")[1].value,
+            lastName: document.getElementsByName("lastName")[0].value,
             phoneNumber: document.getElementsByName("phoneNumber")[0].value,
             parentsNumber: document.getElementsByName("parentsNumber")[0].value,
             address: document.getElementsByName("address")[0].value,

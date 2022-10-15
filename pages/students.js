@@ -249,7 +249,7 @@ export default function Students() {
                                                         style={{width: '35px'}}
                                                         submit={() => createStudent(group.id)}/>
                                                         <Button onClick={() => getTestResultsByGroupId(group.id)}>Test
-                                                            Results</Button>
+                                                            natijalari</Button>
                                                     </th>
                                                 </tr>
                                                 </thead>
@@ -341,10 +341,11 @@ export default function Students() {
                         <th>№</th>
                         <th>FIO</th>
                         {
-                            testResults[0].resTestResults.map(res=>(
-                                <th key={res.testTitle}>{res.testTitle}</th>
+                            testResults[0].resTestResults.map((res, i)=>(
+                                i===0?<th key={res.testTitle}>{res.testTitle}</th>:''
                             ))
                         }
+                        <th>Urinishlar soni</th>
                     </tr>
                     </thead>
                     <tbody>{
@@ -355,9 +356,11 @@ export default function Students() {
                                         {testResult.studentLastName + " " + testResult.studentFirstName}
                                     </td>
                                     {
-                                        testResults[i].resTestResults.map(res=>(
-                                            <td key={i}>{res.result}</td>
+                                        testResults[i].resTestResults.map((res, j)=>(
+                                            i===j ?<><td key={j}>{res.result}</td> <td key={testResult.studentLastName}>{res.attempts}</td></>: ''
+
                                         ))
+                                        // <td>{testResult.resTestResults.get(i).result}</td>
                                     }
                                 </tr>
                             ))
