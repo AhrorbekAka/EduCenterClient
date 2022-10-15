@@ -89,7 +89,7 @@ export default function TestIndex() {
                         {/*        </a>*/}
                         {/*    </Link>*/}
                         {/*</div>*/}
-                        
+
                         <Label className='mr-3 text-md-left text-white'>
                             <p>Telefon №</p>
                             <InputGroup>
