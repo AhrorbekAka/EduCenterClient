@@ -146,15 +146,30 @@ export default function Students() {
     }
 
     const [isTestResultsOpen, setTestResultsOpen] = useState(false)
-    const [testResults, setTestResults] = useState([{resTestResults:[]}])
-    const getTestResultsByGroupId = (groupId) => {
+    const [testResultModalState, setTestResultModalState] = useState(0)
+    const [testList, setTestList] = useState([])
+    const [groupId, setGroupId] = useState()
+    const [testResults, setTestResults] = useState([])
+
+    const getTestListByGroupId = (groupId)=> {
         queryParam({
-            path: '/api/student-history/get-results/' + groupId,
+            path: '/api/test/by-group/' + groupId,
+            method: 'get'
+        }).then(res=>{
+            setTestResultModalState(0)
+            setTestResultsOpen(true)
+            setTestList(res.data.object)
+            setGroupId(groupId)
+        })
+    }
+
+    const getResultsByTestIdAndGroupId = (testId) => {
+        queryParam({
+            path: '/api/test/results/' + testId+"/"+groupId,
             method: 'get'
         }).then(res => {
-            setTestResultsOpen(true)
+            setTestResultModalState(1)
             setTestResults(res.data.object)
-            console.log(res)
         })
     }
 
@@ -248,7 +263,7 @@ export default function Students() {
                                                     <th><AddButton
                                                         style={{width: '35px'}}
                                                         submit={() => createStudent(group.id)}/>
-                                                        <Button onClick={() => getTestResultsByGroupId(group.id)}>Test
+                                                        <Button onClick={() => getTestListByGroupId(group.id)}>Test
                                                             natijalari</Button>
                                                     </th>
                                                 </tr>
@@ -335,16 +350,18 @@ export default function Students() {
                 isOpen={isTestResultsOpen}
                 submit={()=>{setTestResultsOpen(!isTestResultsOpen)}}
                 setOpen={setTestResultsOpen}
-                children={<table className='table m-0 table-bordered'>
+                children={testResultModalState===0?
+                    <ul>
+                        {testList.map((res, i)=>(
+                            <li key={i}><button className='btn' onClick={()=>getResultsByTestIdAndGroupId(res.id)}>{res.title}</button></li>
+                        ))}
+                    </ul> :
+                    <table className='table m-0 table-bordered'>
                     <thead>
                     <tr>
                         <th>№</th>
                         <th>FIO</th>
-                        {
-                            testResults[0].resTestResults.map((res, i)=>(
-                                i===0?<th key={res.testTitle}>{res.testTitle}</th>:''
-                            ))
-                        }
+                        <th>Natijalar</th>
                         <th>Urinishlar soni</th>
                     </tr>
                     </thead>
@@ -355,13 +372,8 @@ export default function Students() {
                                     <td>
                                         {testResult.studentLastName + " " + testResult.studentFirstName}
                                     </td>
-                                    {
-                                        testResults[i].resTestResults.map((res, j)=>(
-                                            i===j ?<><td key={j}>{res.result}</td> <td key={testResult.studentLastName}>{res.attempts}</td></>: ''
-
-                                        ))
-                                        // <td>{testResult.resTestResults.get(i).result}</td>
-                                    }
+                                    <td>{testResult.result}</td>
+                                    <td>{testResult.attempts}</td>
                                 </tr>
                             ))
                     }</tbody>

@@ -4,6 +4,7 @@ import {useState, useEffect} from 'react';
 import {DOMAIN, queryData} from "../services/requestService";
 import Layout from "../components/layout";
 import LoginLayout from "../components/loginLayout";
+import Image from "next/image";
 
 export default function Home() {
 
@@ -60,8 +61,12 @@ export default function Home() {
                                type="password"
                                name="password"/>
 
-                        <button onClick={login}
-                                className='btn btn-info form-group text-monospace'>Log In
+                        <button onClick={login} disabled={loading}
+                                className='btn btn-info form-group text-monospace'>
+                            {loading?<Image src="/loading(2).gif"
+                                            // alt="loading..."
+                                            width={40}
+                                            height={40}/>:<>Log In</>}
                         </button>
                     </div>
                 </div>
