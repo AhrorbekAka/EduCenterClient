@@ -2,8 +2,8 @@ import axios from 'axios';
 import Router from "next/router";
 
 //errorda asosiy sahifaga qaytadigan qilib qo`yishim kerak
-export const DOMAIN = "https://edu-centre.herokuapp.com";
-// export const DOMAIN = "http://localhost:";
+// export const DOMAIN = "https://edu-centre.herokuapp.com";
+export const DOMAIN = "https://fantastic-cristen-aplusangren-6af703f9.koyeb.app";
 
 export function queryData(data) {
     let token = localStorage.getItem('EducationCenterToken');

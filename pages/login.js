@@ -22,7 +22,7 @@ export default function Home() {
     const login = async () => {
         setLoading(true)
         await axios.post(DOMAIN + '/api/auth/login', payload).then(async (res) => {
-                if (res.data.statusCodeValue === 200) {
+            if (res.data.statusCodeValue === 200) {
                     localStorage.setItem("EducationCenterToken", res.data.body.accessToken);
                     queryData({path: "/api/menu", method: 'get'}).then(res => {
                         localStorage.setItem("menu", res.data.object.length)
